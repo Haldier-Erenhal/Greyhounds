@@ -1,0 +1,3004 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Greyhound Motorsports | Compraventa de Autos Exclusivos en México</title>
+  <meta name="description" content="Plataforma digital mexicana de lujo para la compraventa certificada de vehículos comerciales, deportivos, de lujo, exóticos y de colección con servicio White Glove." />
+
+  <!-- Google Fonts: Cinzel (Lujo Serif) e Inter (Moderna Sans-Serif) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS vía CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            obsidian: '#0A0A0A',
+            graphite: '#141414',
+            charcoal: '#1C1C1C',
+            subtle: '#262626',
+            smoke: '#F5F5F5',
+            champagne: '#C9A84C',
+            'champagne-light': '#E0C370',
+            'champagne-dark': '#9E7F32',
+            metallic: '#A3A3A3'
+          },
+          fontFamily: {
+            serif: ['Cinzel', 'serif'],
+            sans: ['Inter', 'sans-serif']
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- Lucide Icons vía CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Chart.js vía CDN para gráfica de depreciación/valorización -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+
+  <style>
+    /* Estilos base complementarios: scrollbar, degradados, skeletons y controles oscuros */
+    body {
+      background-color: #0A0A0A;
+      color: #F5F5F5;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0A0A0A;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #262626;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #C9A84C;
+    }
+
+    .gold-gradient-text {
+      background: linear-gradient(135deg, #F5E6B3 0%, #C9A84C 50%, #9E7F32 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .glass-panel {
+      background: rgba(20, 20, 20, 0.88);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    .hero-fallback-bg {
+      background:
+        radial-gradient(circle at 75% 30%, rgba(201, 168, 76, 0.16) 0%, rgba(20, 20, 20, 0.6) 40%, #0A0A0A 80%),
+        linear-gradient(135deg, #0A0A0A 0%, #171512 50%, #0A0A0A 100%);
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-fade-in {
+      animation: fadeInUp 0.35s ease-out forwards;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    .img-skeleton {
+      background: linear-gradient(90deg, #141414 25%, #222222 50%, #141414 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s infinite linear;
+    }
+
+    input[type="date"]::-webkit-calendar-picker-indicator,
+    input[type="time"]::-webkit-calendar-picker-indicator {
+      filter: invert(0.8) sepia(0.3) saturate(2) hue-rotate(10deg);
+      cursor: pointer;
+    }
+
+    /* Ocultar scrollbar en barra horizontal de marcas manteniendo funcionalidad */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="bg-obsidian text-smoke antialiased selection:bg-champagne selection:text-obsidian">
+
+  <!-- ==================== 1. BARRA DE NAVEGACIÓN FIJA ==================== -->
+  <header id="navbar" class="fixed top-0 left-0 right-0 z-40 transition-all duration-300 bg-obsidian/90 backdrop-blur-md border-b border-subtle">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        <!-- Logo Corporativo -->
+        <a href="#inicio" class="flex items-center gap-3 group focus:outline-none">
+         
+          <div class="leading-tight">
+            <span class="block font-serif text-base sm:text-lg font-bold tracking-[0.18em] text-smoke">GREYHOUND</span>
+            <span class="block text-[10px] tracking-[0.34em] text-champagne uppercase">Motorsports</span>
+          </div>
+        </a>
+
+        <!-- Navegación Escritorio -->
+        <nav class="hidden lg:flex items-center gap-7 text-sm font-medium text-metallic">
+          <a href="#catalogo" class="hover:text-champagne transition-colors">Catálogo</a>
+          <a href="#comparador" class="hover:text-champagne transition-colors inline-flex items-center gap-1.5">
+            <span>Comparador</span>
+            <span id="nav-compare-badge" class="hidden px-2 py-0.5 text-[11px] font-semibold rounded-full bg-champagne text-obsidian">0</span>
+          </a>
+          <a href="#white-glove" class="hover:text-champagne transition-colors">White Glove</a>
+          <a href="#membresias" class="hover:text-champagne transition-colors">Membresías y Aliados</a>
+          <a href="#nosotros" class="hover:text-champagne transition-colors">Nosotros</a>
+          <a href="#citas" class="hover:text-champagne transition-colors">Agendar Cita</a>
+        </nav>
+
+        <!-- Acciones Escritorio + Botón Móvil -->
+        <div class="flex items-center gap-3">
+          <button type="button" onclick="openSellModal('consignacion')" class="hidden sm:inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-champagne text-obsidian text-xs font-semibold uppercase tracking-wider hover:bg-champagne-light transition-all shadow-lg shadow-champagne/10">
+            <i data-lucide="key-round" class="w-4 h-4"></i>
+            <span>Vender Auto</span>
+          </button>
+
+          <button id="mobile-menu-btn" type="button" aria-label="Abrir menú" class="lg:hidden p-2.5 rounded-xl border border-subtle text-smoke hover:border-champagne hover:text-champagne transition-colors">
+            <i data-lucide="menu" class="w-5 h-5"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Menú Desplegable Móvil -->
+    <div id="mobile-menu" class="hidden lg:hidden bg-graphite border-b border-subtle">
+      <div class="px-4 py-5 space-y-2.5 text-sm">
+        <a href="#catalogo" class="mobile-nav-link block py-2.5 px-3 rounded-xl hover:bg-charcoal text-smoke">Catálogo Verificado</a>
+        <a href="#comparador" class="mobile-nav-link flex items-center justify-between py-2.5 px-3 rounded-xl hover:bg-charcoal text-smoke">
+          <span>Comparador Técnico</span>
+          <span id="mobile-compare-badge" class="hidden px-2 py-0.5 text-xs font-semibold rounded-full bg-champagne text-obsidian">0</span>
+        </a>
+        <a href="#white-glove" class="mobile-nav-link block py-2.5 px-3 rounded-xl hover:bg-charcoal text-smoke">Servicio White Glove</a>
+        <a href="#membresias" class="mobile-nav-link block py-2.5 px-3 rounded-xl hover:bg-charcoal text-smoke">Membresías y Aliados</a>
+        <a href="#nosotros" class="mobile-nav-link block py-2.5 px-3 rounded-xl hover:bg-charcoal text-smoke">Filosofía Corporativa</a>
+        <a href="#citas" class="mobile-nav-link block py-2.5 px-3 rounded-xl hover:bg-charcoal text-smoke">Agendar Cita</a>
+        <div class="pt-3 border-t border-subtle">
+          <button type="button" onclick="openSellModal('consignacion'); toggleMobileMenu(false);" class="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-champagne text-obsidian font-semibold uppercase tracking-wider text-xs">
+            <i data-lucide="key-round" class="w-4 h-4"></i>
+            <span>Vender mi Auto</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ==================== 2. HERO SECTION INMERSIVA ==================== -->
+    <section id="inicio" class="relative min-h-screen flex items-center pt-24 pb-16 overflow-hidden hero-fallback-bg">
+      <!-- Fotografía de fondo cargada dinámicamente por CarImageEngine con respaldo CSS -->
+      <div class="absolute inset-0 z-0 overflow-hidden">
+        <img
+          id="hero-bg-img"
+          src=""
+          alt="Vehículo deportivo exclusivo Greyhound Motorsports"
+          referrerpolicy="no-referrer"
+          class="hidden w-full h-full object-cover object-center opacity-40 scale-105 transition-opacity duration-700"
+        />
+        <div class="absolute inset-0 bg-gradient-to-b from-obsidian/90 via-obsidian/70 to-obsidian"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-obsidian via-obsidian/75 to-transparent"></div>
+      </div>
+
+      <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+        <div class="max-w-4xl animate-fade-in">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-champagne/40 bg-graphite/80 text-champagne text-xs uppercase tracking-[0.2em] mb-6">
+            <i data-lucide="shield-check" class="w-4 h-4"></i>
+            <span>Plataforma Mexicana de Intermediación Automotriz Premium</span>
+          </div>
+
+          <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight text-smoke mb-6">
+            Encuentra Cualquier Auto con <span class="gold-gradient-text">Certeza Absoluta</span> y Servicio White Glove
+          </h1>
+
+          <p class="text-base sm:text-lg text-metallic leading-relaxed mb-8 max-w-2xl">
+            Compra, vende y personaliza vehículos comerciales, deportivos, de lujo, exóticos y coleccionables. Accede a nuestro inventario verificado o solicita la localización y personalización de más de <strong class="text-smoke">430 modelos de 47 marcas</strong> sin buscar proveedores externos.
+          </p>
+
+          <!-- Buscador Universal en el Hero (Autocompletado + Cascada Marca/Modelo) -->
+          <form id="hero-search-form" class="glass-panel p-4 rounded-2xl border border-subtle shadow-2xl mb-8 space-y-3">
+            <!-- Fila 1: Buscador con Autocompletado -->
+            <div class="relative">
+              <i data-lucide="search" class="w-4 h-4 text-champagne absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+              <input
+                id="hero-search-input"
+                type="text"
+                autocomplete="off"
+                placeholder="Busca cualquier marca o modelo (ej. Honda S2000, Mitsubishi Evo, Ferrari 296, Toyota AE86)..."
+                class="w-full pl-10 pr-4 py-3.5 rounded-xl bg-obsidian border border-subtle text-sm text-smoke placeholder-metallic focus:outline-none focus:border-champagne transition-colors"
+              />
+              <!-- Dropdown de Autocompletado -->
+              <div id="hero-autocomplete" class="hidden absolute left-0 right-0 top-full mt-2 z-30 max-h-72 overflow-y-auto rounded-xl bg-graphite border border-champagne/50 shadow-2xl divide-y divide-subtle/60"></div>
+            </div>
+
+            <!-- Fila 2: Selectores en Cascada Marca -> Modelo + Ciudad + Botón -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3">
+              <div class="lg:col-span-3">
+                <select id="hero-brand-select" class="w-full px-3.5 py-3 rounded-xl bg-obsidian border border-subtle text-sm text-smoke focus:outline-none focus:border-champagne cursor-pointer">
+                  <option value="Todas">Todas las marcas (47+)</option>
+                </select>
+              </div>
+              <div class="lg:col-span-4">
+                <select id="hero-model-select" disabled class="w-full px-3.5 py-3 rounded-xl bg-obsidian border border-subtle text-sm text-metallic focus:outline-none focus:border-champagne cursor-pointer disabled:opacity-50">
+                  <option value="Todos">Selecciona primero una marca</option>
+                </select>
+              </div>
+              <div class="lg:col-span-2">
+                <select id="hero-city-select" class="w-full px-3.5 py-3 rounded-xl bg-obsidian border border-subtle text-sm text-smoke focus:outline-none focus:border-champagne cursor-pointer">
+                  <option value="Todas">Todas las ciudades</option>
+                  <option value="Tijuana">Tijuana</option>
+                  <option value="Monterrey">Monterrey</option>
+                  <option value="CDMX">CDMX</option>
+                  <option value="Guadalajara">Guadalajara</option>
+                </select>
+              </div>
+              <div class="lg:col-span-3">
+                <button type="submit" class="w-full py-3 px-4 rounded-xl bg-champagne text-obsidian font-semibold text-sm hover:bg-champagne-light transition-colors flex items-center justify-center gap-2">
+                  <span>Buscar Unidad</span>
+                  <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+              </div>
+            </div>
+          </form>
+
+          <!-- Botones CTA -->
+          <div class="flex flex-wrap items-center gap-4 mb-12">
+            <a href="#catalogo" class="px-7 py-3.5 rounded-xl bg-smoke text-obsidian font-semibold text-sm hover:bg-champagne transition-colors inline-flex items-center gap-2">
+              <span>Explorar Catálogo</span>
+              <i data-lucide="chevron-down" class="w-4 h-4"></i>
+            </a>
+            <a href="#citas" class="px-7 py-3.5 rounded-xl border border-champagne/60 text-champagne font-semibold text-sm hover:bg-champagne hover:text-obsidian transition-colors inline-flex items-center gap-2">
+              <i data-lucide="calendar" class="w-4 h-4"></i>
+              <span>Agendar Cita Privada</span>
+            </a>
+          </div>
+
+          <!-- Indicadores de Confianza -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-5 pt-8 border-t border-subtle/80">
+            <div>
+              <p class="font-serif text-2xl font-bold text-champagne" id="stat-brands-count">47+</p>
+              <p class="text-xs text-metallic mt-0.5">Marcas en Directorio</p>
+            </div>
+            <div>
+              <p class="font-serif text-2xl font-bold text-champagne" id="stat-models-count">430+</p>
+              <p class="text-xs text-metallic mt-0.5">Modelos Localizables</p>
+            </div>
+            <div>
+              <p class="font-serif text-2xl font-bold text-champagne" id="stat-inventory-count">51</p>
+              <p class="text-xs text-metallic mt-0.5">Unidades Certificadas</p>
+            </div>
+            <div>
+              <p class="font-serif text-2xl font-bold text-champagne">100%</p>
+              <p class="text-xs text-metallic mt-0.5">Peritaje Mecánico y Legal</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 3. CATÁLOGO VERIFICADO Y DIRECTORIO UNIVERSAL ==================== -->
+    <section id="catalogo" class="py-20 sm:py-24 border-t border-subtle bg-obsidian">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Encabezado -->
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+          <div>
+            <span class="text-xs uppercase tracking-[0.25em] text-champagne font-semibold">Inventario Curado y Búsqueda Universal</span>
+            <h2 class="font-serif text-3xl sm:text-4xl font-bold text-smoke mt-2">Catálogo Verificado</h2>
+            <p class="text-metallic text-sm sm:text-base mt-2 max-w-2xl">
+              Explora vehículos comerciales, deportivos, de lujo, exóticos y coleccionables con fotografías verificadas, diagnóstico mecánico y trazabilidad legal.
+            </p>
+          </div>
+          <div class="flex items-center gap-3 text-sm">
+            <span id="catalog-count" class="px-4 py-2 rounded-full bg-graphite border border-subtle text-smoke font-medium">Cargando inventario...</span>
+          </div>
+        </div>
+
+        <!-- Barra Rápida Desplazable: Explorar por Marca -->
+        <div class="mb-6">
+          <div class="flex items-center justify-between mb-2.5">
+            <span class="text-[11px] uppercase tracking-widest text-metallic font-semibold">Explorar rápido por marca</span>
+            <span class="text-[11px] text-metallic">Desliza para ver todas</span>
+          </div>
+          <div id="brand-pills-bar" class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-2">
+            <!-- Renderizado por JS -->
+          </div>
+        </div>
+
+        <!-- Panel de Filtros Avanzados -->
+        <div class="bg-graphite border border-subtle rounded-2xl p-5 mb-8 space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4">
+            <!-- Buscador con Autocompletado -->
+            <div class="lg:col-span-4 relative">
+              <label for="filter-search" class="block text-[11px] uppercase tracking-wider text-metallic mb-1.5">Buscar marca o modelo</label>
+              <div class="relative">
+                <i data-lucide="search" class="w-4 h-4 text-metallic absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+                <input
+                  id="filter-search"
+                  type="text"
+                  autocomplete="off"
+                  placeholder="Ej. Civic Type R, Supra, GT3..."
+                  class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-obsidian border border-subtle text-sm text-smoke placeholder-metallic focus:outline-none focus:border-champagne"
+                />
+                <div id="catalog-autocomplete" class="hidden absolute left-0 right-0 top-full mt-1.5 z-30 max-h-64 overflow-y-auto rounded-xl bg-graphite border border-champagne/50 shadow-2xl divide-y divide-subtle/60"></div>
+              </div>
+            </div>
+
+            <!-- Marca -->
+            <div class="lg:col-span-2">
+              <label for="filter-brand" class="block text-[11px] uppercase tracking-wider text-metallic mb-1.5">Marca</label>
+              <select id="filter-brand" class="w-full px-3 py-2.5 rounded-xl bg-obsidian border border-subtle text-sm text-smoke focus:outline-none focus:border-champagne cursor-pointer">
+                <option value="Todas">Todas</option>
+              </select>
+            </div>
+
+            <!-- Modelo (Cascada) -->
+            <div class="lg:col-span-2">
+              <label for="filter-model" class="block text-[11px] uppercase tracking-wider text-metallic mb-1.5">Modelo</label>
+              <select id="filter-model" disabled class="w-full px-3 py-2.5 rounded-xl bg-obsidian border border-subtle text-sm text-smoke focus:outline-none focus:border-champagne cursor-pointer disabled:opacity-50">
+                <option value="Todos">Todos</option>
+              </select>
+            </div>
+
+            <!-- Categoría -->
+            <div class="lg:col-span-2">
+              <label for="filter-category" class="block text-[11px] uppercase tracking-wider text-metallic mb-1.5">Categoría</label>
+              <select id="filter-category" class="w-full px-3 py-2.5 rounded-xl bg-obsidian border border-subtle text-sm text-smoke focus:outline-none focus:border-champagne cursor-pointer">
+                <option value="Todos">Todas</option>
+                <option value="Comercial">Comercial</option>
+                <option value="Deportivo">Deportivo</option>
+                <option value="Lujo">Lujo</option>
+                <option value="Exótico">Exótico</option>
+                <option value="Colección">Colección</option>
+              </select>
+            </div>
+
+            <!-- Ciudad -->
+            <div class="lg:col-span-2">
+              <label for="filter-city" class="block text-[11px] uppercase tracking-wider text-metallic mb-1.5">Ciudad</label>
+              <select id="filter-city" class="w-full px-3 py-2.5 rounded-xl bg-obsidian border border-subtle text-sm text-smoke focus:outline-none focus:border-champagne cursor-pointer">
+                <option value="Todas">Todas</option>
+                <option value="Tijuana">Tijuana</option>
+                <option value="Monterrey">Monterrey</option>
+                <option value="CDMX">CDMX</option>
+                <option value="Guadalajara">Guadalajara</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Fila 2 de Filtros: Precio Máximo, Orden y Limpiar -->
+          <div class="grid grid-cols-1 sm:grid-cols-12 gap-4 pt-3 border-t border-subtle/70 items-end">
+            <div class="sm:col-span-5">
+              <label for="filter-max-price" class="block text-[11px] uppercase tracking-wider text-metallic mb-1.5">Presupuesto Máximo (MXN)</label>
+              <select id="filter-max-price" class="w-full px-3 py-2.5 rounded-xl bg-obsidian border border-subtle text-sm text-smoke focus:outline-none focus:border-champagne cursor-pointer">
+                <option value="0">Sin límite de precio</option>
+                <option value="1000000">Hasta $1,000,000 MXN</option>
+                <option value="2000000">Hasta $2,000,000 MXN</option>
+                <option value="4000000">Hasta $4,000,000 MXN</option>
+                <option value="7000000">Hasta $7,000,000 MXN</option>
+                <option value="12000000">Hasta $12,000,000 MXN</option>
+              </select>
+            </div>
+
+            <div class="sm:col-span-5">
+              <label for="filter-sort" class="block text-[11px] uppercase tracking-wider text-metallic mb-1.5">Ordenar resultados</label>
+              <select id="filter-sort" class="w-full px-3 py-2.5 rounded-xl bg-obsidian border border-subtle text-sm text-smoke focus:outline-none focus:border-champagne cursor-pointer">
+                <option value="featured">Destacados Greyhound</option>
+                <option value="price-asc">Precio: Menor a Mayor</option>
+                <option value="price-desc">Precio: Mayor a Menor</option>
+                <option value="year-desc">Año más reciente</option>
+                <option value="hp-desc">Mayor Potencia (HP)</option>
+              </select>
+            </div>
+
+            <div class="sm:col-span-2">
+              <button id="clear-filters-btn" type="button" class="w-full py-2.5 px-4 rounded-xl border border-subtle bg-obsidian text-metallic hover:text-champagne hover:border-champagne transition-colors flex items-center justify-center gap-2 text-sm font-medium">
+                <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                <span>Limpiar</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- PANEL INTELIGENTE WHITE GLOVE / BAJO PEDIDO (se muestra al buscar un modelo fuera de stock) -->
+        <div id="special-order-panel" class="hidden mb-10 rounded-2xl bg-gradient-to-br from-graphite via-charcoal to-graphite border border-champagne/60 p-6 sm:p-8 shadow-2xl animate-fade-in">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+            <div class="lg:col-span-5">
+              <div class="relative aspect-[16/10] rounded-xl overflow-hidden bg-obsidian border border-subtle">
+                <div id="special-order-skeleton" class="absolute inset-0 img-skeleton"></div>
+                <img
+                  id="special-order-img"
+                  src=""
+                  alt="Vehículo bajo pedido"
+                  referrerpolicy="no-referrer"
+                  class="relative z-10 w-full h-full object-cover"
+                />
+                <span class="absolute top-3 left-3 z-20 px-3 py-1 rounded-full bg-champagne text-obsidian text-[11px] font-bold uppercase tracking-wider">
+                  Disponible Bajo Pedido · White Glove
+                </span>
+              </div>
+            </div>
+            <div class="lg:col-span-7 space-y-4">
+              <div class="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-champagne font-semibold">
+                <i data-lucide="sparkles" class="w-4 h-4"></i>
+                <span>Localización e Importación Certificada</span>
+              </div>
+              <h3 id="special-order-title" class="font-serif text-2xl sm:text-3xl font-bold text-smoke"></h3>
+              <p id="special-order-desc" class="text-sm text-metallic leading-relaxed"></p>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-smoke/90">
+                <div class="p-3 rounded-xl bg-obsidian/80 border border-subtle flex items-center gap-2">
+                  <i data-lucide="globe" class="w-4 h-4 text-champagne shrink-0"></i>
+                  <span>Búsqueda en México, EE.UU. y Europa</span>
+                </div>
+                <div class="p-3 rounded-xl bg-obsidian/80 border border-subtle flex items-center gap-2">
+                  <i data-lucide="shield-check" class="w-4 h-4 text-champagne shrink-0"></i>
+                  <span>Peritaje 150 puntos y legalización</span>
+                </div>
+                <div class="p-3 rounded-xl bg-obsidian/80 border border-subtle flex items-center gap-2">
+                  <i data-lucide="wrench" class="w-4 h-4 text-champagne shrink-0"></i>
+                  <span>Personalización antes de entrega</span>
+                </div>
+              </div>
+              <div class="flex flex-wrap gap-3 pt-2">
+                <button id="special-order-cta" type="button" class="px-6 py-3 rounded-xl bg-champagne text-obsidian font-semibold text-sm hover:bg-champagne-light transition-colors inline-flex items-center gap-2">
+                  <i data-lucide="calendar-plus" class="w-4 h-4"></i>
+                  <span>Solicitar Localización y Cotización</span>
+                </button>
+                <button type="button" onclick="resetFilters()" class="px-5 py-3 rounded-xl border border-subtle text-metallic hover:text-smoke hover:border-champagne text-sm transition-colors">
+                  Ver todo el inventario
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Grid de Vehículos -->
+        <div id="catalog-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <!-- Renderizado dinámicamente -->
+        </div>
+
+        <!-- Botón Paginación Progresiva -->
+        <div id="load-more-wrapper" class="hidden text-center mt-10">
+          <button id="load-more-btn" type="button" class="px-8 py-3.5 rounded-xl border border-champagne text-champagne font-semibold text-sm hover:bg-champagne hover:text-obsidian transition-colors inline-flex items-center gap-2">
+            <span>Mostrar más vehículos</span>
+            <i data-lucide="plus-circle" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <!-- Estado vacío general -->
+        <div id="catalog-empty" class="hidden text-center py-14 px-6 bg-graphite border border-subtle rounded-2xl">
+          <i data-lucide="car" class="w-12 h-12 text-champagne/60 mx-auto mb-4"></i>
+          <h3 class="font-serif text-xl text-smoke mb-2">Sin coincidencias exactas en inventario inmediato</h3>
+          <p class="text-sm text-metallic mb-6 max-w-lg mx-auto">
+            Puedes restablecer los filtros o solicitar la búsqueda personalizada de esta unidad con nuestro equipo White Glove.
+          </p>
+          <div class="flex flex-wrap justify-center gap-3">
+            <button type="button" onclick="resetFilters()" class="px-5 py-2.5 rounded-xl bg-champagne text-obsidian font-semibold text-sm hover:bg-champagne-light transition-colors">
+              Restablecer Filtros
+            </button>
+            <a href="#citas" onclick="preselectInterest('Búsqueda Bajo Pedido / White Glove')" class="px-5 py-2.5 rounded-xl border border-champagne text-champagne text-sm font-medium hover:bg-champagne hover:text-obsidian transition-colors">
+              Solicitar Búsqueda a la Medida
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 4. COMPARADOR TÉCNICO INTERACTIVO ==================== -->
+    <section id="comparador" class="py-20 sm:py-24 border-t border-subtle bg-graphite/40">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
+          <div>
+            <span class="text-xs uppercase tracking-[0.25em] text-champagne font-semibold">Análisis Lado a Lado</span>
+            <h2 class="font-serif text-3xl sm:text-4xl font-bold text-smoke mt-2">Comparador Técnico</h2>
+            <p class="text-metallic text-sm sm:text-base mt-2">
+              Selecciona hasta 3 vehículos del catálogo para evaluar su motorización, potencia, aceleración y retención de valor.
+            </p>
+          </div>
+          <button id="clear-compare-section-btn" type="button" onclick="clearComparison()" class="hidden px-4 py-2 rounded-xl border border-subtle text-xs uppercase tracking-wider text-metallic hover:text-smoke hover:border-champagne transition-colors self-start sm:self-auto">
+            Limpiar Comparador
+          </button>
+        </div>
+
+        <div id="compare-container">
+          <!-- Renderizado dinámicamente -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 5. PERSONALIZACIÓN Y SERVICIO WHITE GLOVE ==================== -->
+    <section id="white-glove" class="py-20 sm:py-24 border-t border-subtle bg-obsidian">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          <div class="lg:col-span-5">
+            <span class="text-xs uppercase tracking-[0.25em] text-champagne font-semibold">Acompañamiento Integral</span>
+            <h2 class="font-serif text-3xl sm:text-4xl font-bold text-smoke mt-2 mb-5">
+              Servicio <span class="gold-gradient-text">White Glove</span> y Personalización a la Medida
+            </h2>
+            <p class="text-metallic leading-relaxed mb-5 text-sm sm:text-base">
+              En <strong class="text-smoke">Greyhound Motorsports, S.A. de C.V.</strong> actuamos como intermediarios especializados y <strong class="text-smoke">no como fábrica de ensamble</strong>. Nuestro objetivo es evitar que tengas que buscar proveedores externos para modificar, certificar o transportar tu automóvil.
+            </p>
+            <p class="text-metallic leading-relaxed mb-8 text-sm sm:text-base">
+              Desde la ficha técnica de cualquier unidad puedes preconfigurar paquetes de estética, rines forjados, escape o dyno tuning; nosotros coordinamos todo con talleres aliados certificados y te entregamos el auto listo para conducir.
+            </p>
+            <a href="#citas" onclick="preselectInterest('Personalización White Glove')" class="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-champagne text-obsidian font-semibold text-sm hover:bg-champagne-light transition-colors">
+              <span>Solicitar Asesoría White Glove</span>
+              <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+            </a>
+          </div>
+
+          <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div class="p-6 rounded-2xl bg-graphite border border-subtle hover:border-champagne/50 transition-colors">
+              <div class="w-11 h-11 rounded-xl bg-obsidian border border-subtle flex items-center justify-center text-champagne mb-4">
+                <i data-lucide="sparkles" class="w-5 h-5"></i>
+              </div>
+              <h3 class="font-serif text-lg font-semibold text-smoke mb-2">Estética Automotriz Premium</h3>
+              <p class="text-sm text-metallic leading-relaxed">
+                Película protectora PPF, recubrimiento cerámico de grado concurso, detallado integral e interiores tapizados en piel o alcántara a tu elección.
+              </p>
+            </div>
+
+            <div class="p-6 rounded-2xl bg-graphite border border-subtle hover:border-champagne/50 transition-colors">
+              <div class="w-11 h-11 rounded-xl bg-obsidian border border-subtle flex items-center justify-center text-champagne mb-4">
+                <i data-lucide="gauge" class="w-5 h-5"></i>
+              </div>
+              <h3 class="font-serif text-lg font-semibold text-smoke mb-2">Performance y Dyno Tuning</h3>
+              <p class="text-sm text-metallic leading-relaxed">
+                Gestión de calibraciones Stage 1/2, sistemas de escape en titanio o acero inoxidable, suspensión deportiva y rines forjados con talleres certificados.
+              </p>
+            </div>
+
+            <div class="p-6 rounded-2xl bg-graphite border border-subtle hover:border-champagne/50 transition-colors">
+              <div class="w-11 h-11 rounded-xl bg-obsidian border border-subtle flex items-center justify-center text-champagne mb-4">
+                <i data-lucide="file-check-2" class="w-5 h-5"></i>
+              </div>
+              <h3 class="font-serif text-lg font-semibold text-smoke mb-2">Seguridad Legal y Peritaje</h3>
+              <p class="text-sm text-metallic leading-relaxed">
+                Auditoría de facturas de origen, pedimentos de importación, consulta REPUVE, inspección mecánica de 150 puntos y contratos mercantiles transparentes.
+              </p>
+            </div>
+
+            <div class="p-6 rounded-2xl bg-graphite border border-subtle hover:border-champagne/50 transition-colors">
+              <div class="w-11 h-11 rounded-xl bg-obsidian border border-subtle flex items-center justify-center text-champagne mb-4">
+                <i data-lucide="truck" class="w-5 h-5"></i>
+              </div>
+              <h3 class="font-serif text-lg font-semibold text-smoke mb-2">Demostración y Logística</h3>
+              <p class="text-sm text-metallic leading-relaxed">
+                Demostraciones presenciales agendadas en la ubicación del vehículo y traslado asegurado en madrina cerrada a Tijuana, Monterrey, CDMX y Guadalajara.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 6. VENDE CON NOSOTROS, MEMBRESÍAS Y ALIADOS ==================== -->
+    <section id="membresias" class="py-20 sm:py-24 border-t border-subtle bg-graphite/40">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-14">
+          <span class="text-xs uppercase tracking-[0.25em] text-champagne font-semibold">Modelo Transparente de Intermediación</span>
+          <h2 class="font-serif text-3xl sm:text-4xl font-bold text-smoke mt-2 mb-4">Vende con Nosotros y Aliados Estratégicos</h2>
+          <p class="text-metallic text-sm sm:text-base leading-relaxed">
+            El vendedor fija el precio de su automóvil y Greyhound Motorsports opera bajo un esquema claro de intermediación (<strong class="text-smoke">30% de comisión por venta cerrada</strong>), cubriendo peritaje, difusión digital, perfilamiento de compradores y cierre seguro.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-7">
+          <!-- Plan 1: Membresía Mensual de Vendedor -->
+          <div class="rounded-2xl bg-graphite border border-subtle hover:border-champagne/50 transition-colors p-7 flex flex-col justify-between shadow-xl">
+            <div>
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-obsidian border border-subtle text-metallic text-[11px] font-semibold uppercase tracking-wider mb-5">
+                <i data-lucide="car" class="w-3.5 h-3.5 text-champagne"></i>
+                <span>Propietarios</span>
+              </span>
+              <h3 class="font-serif text-xl font-bold text-smoke mb-2">Membresía Mensual de Vendedor</h3>
+              <p class="text-sm text-metallic mb-6">Ideal para publicar tu unidad certificada con exposición inmediata a compradores NSE A/B.</p>
+              <div class="p-4 rounded-xl bg-obsidian border border-subtle mb-6">
+                <div class="flex items-baseline gap-1.5">
+                  <span class="text-3xl font-bold text-smoke">$1,500</span>
+                  <span class="text-xs text-metallic">MXN / mes</span>
+                </div>
+                <p class="text-[11px] text-metallic mt-1">+ 30% comisión únicamente al concretar venta</p>
+              </div>
+              <ul class="space-y-2.5 text-sm text-smoke/90 mb-8">
+                <li class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-champagne mt-0.5 shrink-0"></i><span>Tú estableces el precio de tu vehículo.</span></li>
+                <li class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-champagne mt-0.5 shrink-0"></i><span>Ficha técnica inmersiva y galería de alta calidad.</span></li>
+                <li class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-champagne mt-0.5 shrink-0"></i><span>Reporte de certificación descargable por unidad.</span></li>
+              </ul>
+            </div>
+            <button type="button" onclick="openSellModal('consignacion', 'Mensual ($1,500 MXN/mes)')" class="w-full py-3 rounded-xl border border-champagne text-champagne font-semibold text-sm hover:bg-champagne hover:text-obsidian transition-colors">
+              Postular con Plan Mensual
+            </button>
+          </div>
+
+          <!-- Plan 2: Plan Semestral de Vendedor (Destacado) -->
+          <div class="relative rounded-2xl bg-graphite border-2 border-champagne p-7 flex flex-col justify-between shadow-2xl shadow-champagne/10">
+            <span class="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3.5 py-1 rounded-full bg-champagne text-obsidian text-[11px] font-bold uppercase tracking-wider">
+              Más Recomendado · Ahorra 60%
+            </span>
+            <div>
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-champagne/15 text-champagne text-[11px] font-semibold uppercase tracking-wider mb-5">
+                <i data-lucide="crown" class="w-3.5 h-3.5"></i>
+                <span>Coleccionistas y Flotas</span>
+              </span>
+              <h3 class="font-serif text-xl font-bold text-smoke mb-2">Plan Semestral de Vendedor</h3>
+              <p class="text-sm text-metallic mb-6">Cobertura continua de 6 meses para unidades de alto valor y coleccionistas recurrentes.</p>
+              <div class="p-4 rounded-xl bg-obsidian border border-champagne/40 mb-6">
+                <div class="flex items-baseline gap-1.5">
+                  <span class="text-3xl font-bold text-champagne">$3,600</span>
+                  <span class="text-xs text-metallic">MXN / 6 meses</span>
+                </div>
+                <p class="text-[11px] text-champagne/90 mt-1">Equivalente a $600 MXN/mes · Prioridad en catálogo</p>
+              </div>
+              <ul class="space-y-2.5 text-sm text-smoke/90 mb-8">
+                <li class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-champagne mt-0.5 shrink-0"></i><span>Todo lo incluido en la Membresía Mensual.</span></li>
+                <li class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-champagne mt-0.5 shrink-0"></i><span>Posicionamiento destacado en portada y redes sociales.</span></li>
+                <li class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-champagne mt-0.5 shrink-0"></i><span>Coordinación discreta de demostraciones privadas.</span></li>
+              </ul>
+            </div>
+            <button type="button" onclick="openSellModal('consignacion', 'Semestral ($3,600 MXN / 6 meses)')" class="w-full py-3 rounded-xl bg-champagne text-obsidian font-semibold text-sm hover:bg-champagne-light transition-colors">
+              Postular con Plan Semestral
+            </button>
+          </div>
+
+          <!-- Plan 3: Espacio para Aliados Estratégicos -->
+          <div class="rounded-2xl bg-graphite border border-subtle hover:border-champagne/50 transition-colors p-7 flex flex-col justify-between shadow-xl">
+            <div>
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-obsidian border border-subtle text-metallic text-[11px] font-semibold uppercase tracking-wider mb-5">
+                <i data-lucide="handshake" class="w-3.5 h-3.5 text-champagne"></i>
+                <span>Empresas del Sector</span>
+              </span>
+              <h3 class="font-serif text-xl font-bold text-smoke mb-2">Espacio para Aliados Estratégicos</h3>
+              <p class="text-sm text-metallic mb-6">Dirigido a financieras, aseguradoras premium y talleres especializados de estética o performance.</p>
+              <div class="p-4 rounded-xl bg-obsidian border border-subtle mb-6">
+                <div class="flex items-baseline gap-1.5">
+                  <span class="text-3xl font-bold text-smoke">$5,000</span>
+                  <span class="text-xs text-metallic">MXN / mes</span>
+                </div>
+                <p class="text-[11px] text-metallic mt-1">Tijuana, Monterrey, CDMX y Guadalajara</p>
+              </div>
+              <ul class="space-y-2.5 text-sm text-smoke/90 mb-8">
+                <li class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-champagne mt-0.5 shrink-0"></i><span>Integración directa en paquetes White Glove.</span></li>
+                <li class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-champagne mt-0.5 shrink-0"></i><span>Presencia en campañas de Instagram, YouTube y TikTok.</span></li>
+                <li class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-champagne mt-0.5 shrink-0"></i><span>Participación en ferias y eventos automotrices.</span></li>
+              </ul>
+            </div>
+            <button type="button" onclick="openSellModal('alianza')" class="w-full py-3 rounded-xl border border-champagne text-champagne font-semibold text-sm hover:bg-champagne hover:text-obsidian transition-colors">
+              Solicitar Alianza Estratégica
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 7. FILOSOFÍA CORPORATIVA (NOSOTROS) ==================== -->
+    <section id="nosotros" class="py-20 sm:py-24 border-t border-subtle bg-obsidian">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-14">
+          <span class="text-xs uppercase tracking-[0.25em] text-champagne font-semibold">Identidad Corporativa</span>
+          <h2 class="font-serif text-3xl sm:text-4xl font-bold text-smoke mt-2">Filosofía Greyhound Motorsports</h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+          <div class="p-8 rounded-2xl bg-graphite border border-subtle">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="p-2.5 rounded-xl bg-obsidian border border-subtle text-champagne">
+                <i data-lucide="compass" class="w-5 h-5"></i>
+              </div>
+              <h3 class="font-serif text-2xl font-bold text-smoke">Misión</h3>
+            </div>
+            <p class="text-metallic leading-relaxed text-sm sm:text-base">
+              Somos una empresa dedicada a la compraventa de autos exclusivos a través de una plataforma digital.
+            </p>
+          </div>
+
+          <div class="p-8 rounded-2xl bg-graphite border border-subtle">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="p-2.5 rounded-xl bg-obsidian border border-subtle text-champagne">
+                <i data-lucide="eye" class="w-5 h-5"></i>
+              </div>
+              <h3 class="font-serif text-2xl font-bold text-smoke">Visión</h3>
+            </div>
+            <p class="text-metallic leading-relaxed text-sm sm:text-base">
+              Ser la empresa de referencia en la comercialización de vehículos exclusivos, la seguridad en cada transacción y un servicio de estándar premium. Queremos que quienes aman los autos la elijan por su confianza y exclusividad.
+            </p>
+          </div>
+        </div>
+
+        <!-- 6 Valores Corporativos -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div class="p-6 rounded-2xl bg-graphite/70 border border-subtle hover:border-champagne/40 transition-colors">
+            <i data-lucide="shield-check" class="w-6 h-6 text-champagne mb-3"></i>
+            <h4 class="font-serif text-base font-semibold text-smoke mb-1.5">Transparencia y Confiabilidad</h4>
+            <p class="text-sm text-metallic">Precios claros, historiales verificables y diagnósticos mecánicos certificados.</p>
+          </div>
+          <div class="p-6 rounded-2xl bg-graphite/70 border border-subtle hover:border-champagne/40 transition-colors">
+            <i data-lucide="gem" class="w-6 h-6 text-champagne mb-3"></i>
+            <h4 class="font-serif text-base font-semibold text-smoke mb-1.5">Pasión y Exclusividad</h4>
+            <p class="text-sm text-metallic">Calidad superior y respeto por el diseño, la ingeniería y la historia de cada auto.</p>
+          </div>
+          <div class="p-6 rounded-2xl bg-graphite/70 border border-subtle hover:border-champagne/40 transition-colors">
+            <i data-lucide="cpu" class="w-6 h-6 text-champagne mb-3"></i>
+            <h4 class="font-serif text-base font-semibold text-smoke mb-1.5">Innovación</h4>
+            <p class="text-sm text-metallic">Herramientas digitales que simplifican la búsqueda, comparación y compra segura.</p>
+          </div>
+          <div class="p-6 rounded-2xl bg-graphite/70 border border-subtle hover:border-champagne/40 transition-colors">
+            <i data-lucide="user-check" class="w-6 h-6 text-champagne mb-3"></i>
+            <h4 class="font-serif text-base font-semibold text-smoke mb-1.5">Atención Personalizada</h4>
+            <p class="text-sm text-metallic">Acompañamiento discreto y a la medida para cada coleccionista o comprador.</p>
+          </div>
+          <div class="p-6 rounded-2xl bg-graphite/70 border border-subtle hover:border-champagne/40 transition-colors">
+            <i data-lucide="lock" class="w-6 h-6 text-champagne mb-3"></i>
+            <h4 class="font-serif text-base font-semibold text-smoke mb-1.5">Seguridad y Confidencialidad</h4>
+            <p class="text-sm text-metallic">Protección integral de datos personales, identidad y patrimonio en cada operación.</p>
+          </div>
+          <div class="p-6 rounded-2xl bg-graphite/70 border border-subtle hover:border-champagne/40 transition-colors">
+            <i data-lucide="users" class="w-6 h-6 text-champagne mb-3"></i>
+            <h4 class="font-serif text-base font-semibold text-smoke mb-1.5">Trabajo en Equipo y Compromiso Social</h4>
+            <p class="text-sm text-metallic">Colaboración, respeto y desarrollo responsable del entorno automotriz nacional.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 8. AGENDAMIENTO DE CITAS DE DEMOSTRACIÓN ==================== -->
+    <section id="citas" class="py-20 sm:py-24 border-t border-subtle bg-graphite/40">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-2xl mx-auto mb-12">
+          <span class="text-xs uppercase tracking-[0.25em] text-champagne font-semibold">Atención Privada</span>
+          <h2 class="font-serif text-3xl sm:text-4xl font-bold text-smoke mt-2 mb-3">Agenda una Cita de Demostración</h2>
+          <p class="text-metallic text-sm sm:text-base">
+            Coordina una demostración presencial en la ubicación del vehículo o una sesión privada en Tijuana, Monterrey, CDMX o Guadalajara.
+          </p>
+        </div>
+
+        <div class="bg-graphite border border-subtle rounded-2xl p-6 sm:p-10 shadow-2xl">
+          <form id="appointment-form" class="space-y-6" novalidate>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div>
+                <label for="appt-name" class="block text-xs uppercase tracking-wider text-metallic mb-2">Nombre completo *</label>
+                <input id="appt-name" type="text" required placeholder="Ej. Alejandro Mendoza" class="w-full px-4 py-3 rounded-xl bg-obsidian border border-subtle text-sm text-smoke placeholder-metallic/60 focus:outline-none focus:border-champagne" />
+              </div>
+              <div>
+                <label for="appt-email" class="block text-xs uppercase tracking-wider text-metallic mb-2">Correo electrónico *</label>
+                <input id="appt-email" type="email" required placeholder="correo@empresa.com" class="w-full px-4 py-3 rounded-xl bg-obsidian border border-subtle text-sm text-smoke placeholder-metallic/60 focus:outline-none focus:border-champagne" />
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div>
+                <label for="appt-phone" class="block text-xs uppercase tracking-wider text-metallic mb-2">Teléfono / WhatsApp *</label>
+                <input id="appt-phone" type="tel" required placeholder="+52 664 000 0000" class="w-full px-4 py-3 rounded-xl bg-obsidian border border-subtle text-sm text-smoke placeholder-metallic/60 focus:outline-none focus:border-champagne" />
+              </div>
+              <div>
+                <label for="appt-vehicle" class="block text-xs uppercase tracking-wider text-metallic mb-2">Vehículo de interés *</label>
+                <input id="appt-vehicle" type="text" list="appt-vehicle-datalist" required placeholder="Escribe o selecciona un vehículo..." class="w-full px-4 py-3 rounded-xl bg-obsidian border border-subtle text-sm text-smoke placeholder-metallic/60 focus:outline-none focus:border-champagne" />
+                <datalist id="appt-vehicle-datalist"></datalist>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+              <div>
+                <label for="appt-city" class="block text-xs uppercase tracking-wider text-metallic mb-2">Ciudad *</label>
+                <select id="appt-city" required class="w-full px-4 py-3 rounded-xl bg-obsidian border border-subtle text-sm text-smoke focus:outline-none focus:border-champagne cursor-pointer">
+                  <option value="Tijuana">Tijuana</option>
+                  <option value="Monterrey">Monterrey</option>
+                  <option value="CDMX">CDMX</option>
+                  <option value="Guadalajara">Guadalajara</option>
+                </select>
+              </div>
+              <div>
+                <label for="appt-date" class="block text-xs uppercase tracking-wider text-metallic mb-2">Fecha preferida *</label>
+                <input id="appt-date" type="date" required class="w-full px-4 py-3 rounded-xl bg-obsidian border border-subtle text-sm text-smoke focus:outline-none focus:border-champagne" />
+              </div>
+              <div>
+                <label for="appt-time" class="block text-xs uppercase tracking-wider text-metallic mb-2">Hora preferida *</label>
+                <input id="appt-time" type="time" required value="12:00" class="w-full px-4 py-3 rounded-xl bg-obsidian border border-subtle text-sm text-smoke focus:outline-none focus:border-champagne" />
+              </div>
+            </div>
+
+            <div>
+              <label for="appt-interest" class="block text-xs uppercase tracking-wider text-metallic mb-2">Tipo de interés *</label>
+              <select id="appt-interest" required class="w-full px-4 py-3 rounded-xl bg-obsidian border border-subtle text-sm text-smoke focus:outline-none focus:border-champagne cursor-pointer">
+                <option value="Compra de Vehículo Certificado">Compra de Vehículo Certificado</option>
+                <option value="Personalización White Glove">Personalización White Glove</option>
+                <option value="Búsqueda Bajo Pedido / White Glove">Búsqueda Bajo Pedido / White Glove</option>
+                <option value="Consignación / Venta">Consignación / Venta de mi Unidad</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="appt-comments" class="block text-xs uppercase tracking-wider text-metallic mb-2">Personalizaciones o comentarios adicionales</label>
+              <textarea id="appt-comments" rows="3" placeholder="Paquetes de personalización, preferencias de financiamiento o horario de contacto..." class="w-full px-4 py-3 rounded-xl bg-obsidian border border-subtle text-sm text-smoke placeholder-metallic/60 focus:outline-none focus:border-champagne"></textarea>
+            </div>
+
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2">
+              <p class="text-xs text-metallic flex items-center gap-2">
+                <i data-lucide="lock" class="w-4 h-4 text-champagne shrink-0"></i>
+                <span>Datos protegidos conforme a nuestro Aviso de Privacidad.</span>
+              </p>
+              <button type="submit" class="px-8 py-3.5 rounded-xl bg-champagne text-obsidian font-semibold text-sm hover:bg-champagne-light transition-colors inline-flex items-center justify-center gap-2">
+                <i data-lucide="calendar-check" class="w-4 h-4"></i>
+                <span>Confirmar Cita Privada</span>
+              </button>
+            </div>
+          </form>
+
+          <!-- Confirmación de Cita -->
+          <div id="appointment-confirmation" class="hidden text-center py-6 animate-fade-in">
+            <div class="w-16 h-16 rounded-full bg-champagne/15 border border-champagne text-champagne flex items-center justify-center mx-auto mb-5">
+              <i data-lucide="check" class="w-8 h-8"></i>
+            </div>
+            <span class="text-xs uppercase tracking-[0.25em] text-champagne font-semibold">Solicitud Confirmada</span>
+            <h3 class="font-serif text-2xl sm:text-3xl font-bold text-smoke mt-2 mb-2">Cita Privada Registrada</h3>
+            <p class="text-sm text-metallic mb-6 max-w-lg mx-auto">
+              Un asesor senior de Greyhound Motorsports te contactará a la brevedad para confirmar ubicación exacta y protocolo de exhibición.
+            </p>
+
+            <div class="max-w-md mx-auto bg-obsidian border border-subtle rounded-xl p-5 text-left space-y-2.5 text-sm mb-8">
+              <div class="flex justify-between border-b border-subtle pb-2">
+                <span class="text-metallic">Folio de cita:</span>
+                <span id="conf-folio" class="font-mono font-bold text-champagne">GHM-2026-0000</span>
+              </div>
+              <div class="flex justify-between gap-2">
+                <span class="text-metallic">Cliente:</span>
+                <span id="conf-name" class="text-smoke font-medium text-right"></span>
+              </div>
+              <div class="flex justify-between gap-2">
+                <span class="text-metallic">Unidad:</span>
+                <span id="conf-vehicle" class="text-smoke font-medium text-right"></span>
+              </div>
+              <div class="flex justify-between gap-2">
+                <span class="text-metallic">Ciudad:</span>
+                <span id="conf-city" class="text-smoke font-medium text-right"></span>
+              </div>
+              <div class="flex justify-between gap-2">
+                <span class="text-metallic">Fecha y hora:</span>
+                <span id="conf-datetime" class="text-smoke font-medium text-right"></span>
+              </div>
+              <div class="flex justify-between gap-2">
+                <span class="text-metallic">Motivo:</span>
+                <span id="conf-interest" class="text-smoke font-medium text-right"></span>
+              </div>
+            </div>
+
+            <button type="button" onclick="resetAppointmentForm()" class="px-6 py-2.5 rounded-xl border border-champagne text-champagne text-sm font-medium hover:bg-champagne hover:text-obsidian transition-colors">
+              Agendar Otra Cita
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==================== 9. FOOTER CORPORATIVO Y LEGAL ==================== -->
+  <footer class="bg-obsidian border-t border-subtle pt-16 pb-24 lg:pb-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 pb-12 border-b border-subtle">
+        <div class="lg:col-span-2">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-9 h-9 rounded-xl border border-champagne/50 bg-graphite flex items-center justify-center">
+              <svg class="w-5 h-5 text-champagne" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3z"/>
+                <path d="M7.5 13.5c2-1.5 4.5-2.5 8.5-2l1.5-1.2"/>
+              </svg>
+            </div>
+            <div>
+              <span class="block font-serif text-base font-bold tracking-[0.18em] text-smoke">GREYHOUND MOTORSPORTS</span>
+              <span class="block text-[10px] tracking-[0.25em] text-champagne uppercase">S.A. de C.V.</span>
+            </div>
+          </div>
+          <p class="text-sm text-metallic max-w-md leading-relaxed mb-5">
+            Plataforma mexicana de referencia en compraventa certificada de vehículos comerciales, deportivos, de lujo, exóticos y coleccionables con servicio White Glove.
+          </p>
+          <p class="text-xs text-metallic flex items-start gap-2">
+            <i data-lucide="map-pin" class="w-4 h-4 text-champagne shrink-0 mt-0.5"></i>
+            <span>Av. Revolución No. 1450, Local 3, Col. Zona Centro, C.P. 22000, Tijuana, Baja California, México.</span>
+          </p>
+        </div>
+
+        <div>
+          <h4 class="font-serif text-sm font-semibold uppercase tracking-widest text-smoke mb-4">Navegación</h4>
+          <ul class="space-y-2.5 text-sm text-metallic">
+            <li><a href="#catalogo" class="hover:text-champagne transition-colors">Catálogo Verificado</a></li>
+            <li><a href="#comparador" class="hover:text-champagne transition-colors">Comparador Técnico</a></li>
+            <li><a href="#white-glove" class="hover:text-champagne transition-colors">Servicio White Glove</a></li>
+            <li><a href="#membresias" class="hover:text-champagne transition-colors">Membresías y Aliados</a></li>
+            <li><a href="#citas" class="hover:text-champagne transition-colors">Agendar Cita</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="font-serif text-sm font-semibold uppercase tracking-widest text-smoke mb-4">Legal y Redes</h4>
+          <ul class="space-y-2.5 text-sm text-metallic mb-6">
+            <li><button type="button" onclick="openLegalModal('privacy')" class="hover:text-champagne transition-colors text-left">Aviso de Privacidad</button></li>
+            <li><button type="button" onclick="openLegalModal('terms')" class="hover:text-champagne transition-colors text-left">Términos y Condiciones Legales</button></li>
+          </ul>
+          <div class="flex items-center gap-3">
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="p-2.5 rounded-xl bg-graphite border border-subtle text-metallic hover:text-champagne hover:border-champagne transition-colors">
+              <i data-lucide="instagram" class="w-4 h-4"></i>
+            </a>
+            <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" aria-label="YouTube" class="p-2.5 rounded-xl bg-graphite border border-subtle text-metallic hover:text-champagne hover:border-champagne transition-colors">
+              <i data-lucide="youtube" class="w-4 h-4"></i>
+            </a>
+            <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" aria-label="TikTok" class="p-2.5 rounded-xl bg-graphite border border-subtle text-metallic hover:text-champagne hover:border-champagne transition-colors">
+              <i data-lucide="video" class="w-4 h-4"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-metallic">
+        <p>&copy; 2026 Greyhound Motorsports, S.A. de C.V. Todos los derechos reservados.</p>
+        <p>Tijuana · Monterrey · CDMX · Guadalajara</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==================== BARRA FLOTANTE DEL COMPARADOR ==================== -->
+  <div id="compare-floating-bar" class="hidden fixed bottom-4 left-1/2 -translate-x-1/2 z-30 w-[94%] max-w-3xl glass-panel border border-champagne/60 rounded-2xl p-3.5 shadow-2xl shadow-black/80">
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div class="flex items-center gap-3 w-full sm:w-auto overflow-x-auto no-scrollbar">
+        <span class="text-xs font-semibold uppercase tracking-wider text-champagne shrink-0">
+          Comparar (<span id="floating-compare-count">0</span>/3):
+        </span>
+        <div id="floating-compare-items" class="flex items-center gap-2"></div>
+      </div>
+      <div class="flex items-center gap-2 shrink-0 w-full sm:w-auto justify-end">
+        <button type="button" onclick="clearComparison()" class="px-3 py-2 rounded-xl border border-subtle text-xs text-metallic hover:text-smoke hover:border-smoke transition-colors">
+          Limpiar
+        </button>
+        <a href="#comparador" class="px-4 py-2 rounded-xl bg-champagne text-obsidian font-semibold text-xs hover:bg-champagne-light transition-colors inline-flex items-center gap-1.5">
+          <span>Ver Comparación</span>
+          <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL DE FICHA TÉCNICA + CONFIGURADOR WHITE GLOVE ==================== -->
+  <div id="vehicle-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="modal-vehicle-title">
+    <div class="relative w-full max-w-5xl max-h-[92vh] overflow-y-auto bg-graphite border border-subtle rounded-2xl shadow-2xl">
+      <!-- Header Modal -->
+      <div class="sticky top-0 z-20 flex items-center justify-between px-6 py-4 bg-graphite/95 backdrop-blur border-b border-subtle">
+        <div>
+          <span id="modal-vehicle-category" class="text-[11px] uppercase tracking-[0.2em] text-champagne font-semibold"></span>
+          <h3 id="modal-vehicle-title" class="font-serif text-xl sm:text-2xl font-bold text-smoke"></h3>
+        </div>
+        <button type="button" onclick="closeModal('vehicle-modal')" aria-label="Cerrar ficha técnica" class="p-2 rounded-xl border border-subtle text-metallic hover:text-smoke hover:border-champagne transition-colors">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Cuerpo Modal -->
+      <div class="p-6 space-y-8">
+        <!-- Galería + Resumen y Precio -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <div class="lg:col-span-7 space-y-3">
+            <div class="relative aspect-[16/10] w-full rounded-xl overflow-hidden bg-obsidian border border-subtle">
+              <img id="modal-main-image" src="" alt="Vista principal del vehículo" referrerpolicy="no-referrer" class="w-full h-full object-cover" />
+            </div>
+            <div id="modal-thumbnails" class="grid grid-cols-4 gap-2.5">
+              <!-- Miniaturas reales cargadas por CarImageEngine -->
+            </div>
+          </div>
+
+          <div class="lg:col-span-5 flex flex-col justify-between space-y-5">
+            <div>
+              <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-champagne/15 border border-champagne/40 text-champagne text-xs font-medium mb-4">
+                <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+                <span>Certificación Mecánica y Legal Aprobada</span>
+              </div>
+
+              <div class="mb-4 p-4 rounded-xl bg-obsidian border border-subtle">
+                <div class="flex items-center justify-between text-xs text-metallic">
+                  <span>Precio base certificado</span>
+                  <span id="modal-base-price" class="font-medium text-smoke"></span>
+                </div>
+                <div class="flex items-center justify-between text-xs text-metallic mt-1">
+                  <span>Personalización White Glove</span>
+                  <span id="modal-custom-price" class="font-medium text-champagne">+$0 MXN</span>
+                </div>
+                <div class="border-t border-subtle my-2.5"></div>
+                <div class="flex items-baseline justify-between">
+                  <span class="text-xs uppercase tracking-wider text-smoke font-semibold">Total Estimado</span>
+                  <span id="modal-total-price" class="text-2xl font-bold text-champagne"></span>
+                </div>
+              </div>
+
+              <p id="modal-vehicle-desc" class="text-sm text-metallic leading-relaxed mb-4"></p>
+
+              <!-- Especificaciones Clave -->
+              <div id="modal-specs-grid" class="grid grid-cols-2 gap-2.5 text-sm"></div>
+            </div>
+
+            <!-- Botones de Acción -->
+            <div class="space-y-2.5 pt-3 border-t border-subtle">
+              <button id="modal-schedule-btn" type="button" class="w-full py-3.5 px-5 rounded-xl bg-champagne text-obsidian font-semibold text-sm hover:bg-champagne-light transition-colors flex items-center justify-center gap-2">
+                <i data-lucide="calendar" class="w-4 h-4"></i>
+                <span>Agendar Demostración con esta Configuración</span>
+              </button>
+              <button id="modal-download-btn" type="button" class="w-full py-3 px-5 rounded-xl border border-subtle bg-obsidian text-smoke font-medium text-sm hover:border-champagne hover:text-champagne transition-colors flex items-center justify-center gap-2">
+                <i data-lucide="file-down" class="w-4 h-4"></i>
+                <span>Descargar Reporte de Certificación</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Configurador de Personalización Integrada (White Glove) -->
+        <div class="bg-obsidian border border-subtle rounded-2xl p-5">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+            <div>
+              <h4 class="font-serif text-base font-semibold text-smoke flex items-center gap-2">
+                <i data-lucide="sliders-horizontal" class="w-4 h-4 text-champagne"></i>
+                <span>Configurador de Personalización Integrada (White Glove)</span>
+              </h4>
+              <p class="text-xs text-metallic mt-0.5">Selecciona los paquetes que deseas integrar antes de la entrega sin contratar talleres externos.</p>
+            </div>
+          </div>
+          <div id="modal-customization-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            <!-- Checkboxes generados por JS -->
+          </div>
+        </div>
+
+        <!-- Historial Legal + Gráfica de Valorización -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 pt-2">
+          <div class="lg:col-span-5 bg-obsidian border border-subtle rounded-xl p-5">
+            <h4 class="font-serif text-base font-semibold text-smoke mb-3 flex items-center gap-2">
+              <i data-lucide="file-check" class="w-4 h-4 text-champagne"></i>
+              <span>Dictamen Legal y Mecánico</span>
+            </h4>
+            <ul id="modal-legal-list" class="space-y-2.5 text-sm text-metallic"></ul>
+          </div>
+
+          <div class="lg:col-span-7 bg-obsidian border border-subtle rounded-xl p-5">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+              <h4 class="font-serif text-base font-semibold text-smoke flex items-center gap-2">
+                <i data-lucide="trending-up" class="w-4 h-4 text-champagne"></i>
+                <span>Análisis de Depreciación / Valorización (5 Años)</span>
+              </h4>
+              <span id="modal-retention-badge" class="text-xs px-2.5 py-1 rounded-full bg-champagne/15 text-champagne font-medium"></span>
+            </div>
+            <div class="relative h-56 w-full">
+              <canvas id="depreciation-chart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL CONSIGNACIÓN / ALIANZA ==================== -->
+  <div id="sell-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="sell-modal-title">
+    <div class="relative w-full max-w-xl max-h-[90vh] overflow-y-auto bg-graphite border border-subtle rounded-2xl shadow-2xl p-6 sm:p-8">
+      <div class="flex items-center justify-between mb-6">
+        <div>
+          <span class="text-xs uppercase tracking-[0.2em] text-champagne font-semibold">Greyhound Motorsports</span>
+          <h3 id="sell-modal-title" class="font-serif text-2xl font-bold text-smoke mt-1">Postular Vehículo</h3>
+        </div>
+        <button type="button" onclick="closeModal('sell-modal')" aria-label="Cerrar" class="p-2 rounded-xl border border-subtle text-metallic hover:text-smoke hover:border-champagne transition-colors">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2 p-1 rounded-xl bg-obsidian border border-subtle mb-6">
+        <button id="tab-consignacion" type="button" onclick="switchSellTab('consignacion')" class="py-2.5 rounded-lg text-xs font-semibold uppercase tracking-wider transition-colors bg-champagne text-obsidian">
+          Membresía Vendedor
+        </button>
+        <button id="tab-alianza" type="button" onclick="switchSellTab('alianza')" class="py-2.5 rounded-lg text-xs font-semibold uppercase tracking-wider transition-colors text-metallic hover:text-smoke">
+          Alianza Estratégica
+        </button>
+      </div>
+
+      <form id="sell-form" class="space-y-4" novalidate>
+        <input id="sell-mode" type="hidden" value="consignacion" />
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label for="sell-name" class="block text-xs uppercase tracking-wider text-metallic mb-1.5">Nombre / Contacto *</label>
+            <input id="sell-name" type="text" required placeholder="Tu nombre completo" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian border border-subtle text-sm text-smoke focus:outline-none focus:border-champagne" />
+          </div>
+          <div>
+            <label for="sell-phone" class="block text-xs uppercase tracking-wider text-metallic mb-1.5">Teléfono *</label>
+            <input id="sell-phone" type="tel" required placeholder="+52..." class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian border border-subtle text-sm text-smoke focus:outline-none focus:border-champagne" />
+          </div>
+        </div>
+
+        <div>
+          <label for="sell-email" class="block text-xs uppercase tracking-wider text-metallic mb-1.5">Correo electrónico *</label>
+          <input id="sell-email" type="email" required placeholder="contacto@correo.com" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian border border-subtle text-sm text-smoke focus:outline-none focus:border-champagne" />
+        </div>
+
+        <!-- Campos Consignación -->
+        <div id="sell-vehicle-fields" class="space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label for="sell-brand" class="block text-xs uppercase tracking-wider text-metallic mb-1.5">Marca *</label>
+              <select id="sell-brand" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian border border-subtle text-sm text-smoke focus:outline-none focus:border-champagne cursor-pointer">
+                <option value="">Selecciona marca</option>
+              </select>
+            </div>
+            <div>
+              <label for="sell-model" class="block text-xs uppercase tracking-wider text-metallic mb-1.5">Modelo *</label>
+              <select id="sell-model" disabled class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian border border-subtle text-sm text-smoke focus:outline-none focus:border-champagne cursor-pointer disabled:opacity-50">
+                <option value="">Selecciona modelo</option>
+              </select>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label for="sell-car-year" class="block text-xs uppercase tracking-wider text-metallic mb-1.5">Año *</label>
+              <input id="sell-car-year" type="number" min="1950" max="2027" placeholder="Ej. 2024" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian border border-subtle text-sm text-smoke focus:outline-none focus:border-champagne" />
+            </div>
+            <div>
+              <label for="sell-car-price" class="block text-xs uppercase tracking-wider text-metallic mb-1.5">Precio deseado (MXN) *</label>
+              <input id="sell-car-price" type="text" placeholder="Ej. $2,450,000" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian border border-subtle text-sm text-smoke focus:outline-none focus:border-champagne" />
+            </div>
+          </div>
+          <div>
+            <label for="sell-plan" class="block text-xs uppercase tracking-wider text-metallic mb-1.5">Modalidad de Membresía</label>
+            <select id="sell-plan" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian border border-subtle text-sm text-smoke focus:outline-none focus:border-champagne">
+              <option value="Mensual ($1,500 MXN/mes)">Membresía Mensual — $1,500 MXN / mes</option>
+              <option value="Semestral ($3,600 MXN / 6 meses)">Plan Semestral Preferencial — $3,600 MXN / 6 meses</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Campos Alianza -->
+        <div id="sell-alliance-fields" class="hidden space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label for="sell-company" class="block text-xs uppercase tracking-wider text-metallic mb-1.5">Nombre de la Empresa *</label>
+              <input id="sell-company" type="text" placeholder="Ej. Taller / Financiera" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian border border-subtle text-sm text-smoke focus:outline-none focus:border-champagne" />
+            </div>
+            <div>
+              <label for="sell-sector" class="block text-xs uppercase tracking-wider text-metallic mb-1.5">Giro *</label>
+              <select id="sell-sector" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian border border-subtle text-sm text-smoke focus:outline-none focus:border-champagne">
+                <option value="Financiera / Arrendadora">Financiera / Arrendadora</option>
+                <option value="Aseguradora Premium">Aseguradora Premium</option>
+                <option value="Taller de Performance / Estética">Taller de Performance / Estética</option>
+                <option value="Club Automotriz / Otro">Club Automotriz / Otro</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label for="sell-city" class="block text-xs uppercase tracking-wider text-metallic mb-1.5">Ciudad principal</label>
+          <select id="sell-city" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian border border-subtle text-sm text-smoke focus:outline-none focus:border-champagne">
+            <option value="Tijuana">Tijuana</option>
+            <option value="Monterrey">Monterrey</option>
+            <option value="CDMX">CDMX</option>
+            <option value="Guadalajara">Guadalajara</option>
+            <option value="Otra ciudad en México">Otra ciudad en México</option>
+          </select>
+        </div>
+
+        <button type="submit" class="w-full py-3.5 rounded-xl bg-champagne text-obsidian font-semibold text-sm hover:bg-champagne-light transition-colors">
+          Enviar Solicitud
+        </button>
+      </form>
+
+      <div id="sell-confirmation" class="hidden text-center py-6 animate-fade-in">
+        <div class="w-14 h-14 rounded-full bg-champagne/15 border border-champagne text-champagne flex items-center justify-center mx-auto mb-4">
+          <i data-lucide="check" class="w-7 h-7"></i>
+        </div>
+        <h4 class="font-serif text-xl font-bold text-smoke mb-2">Solicitud Recibida</h4>
+        <p id="sell-conf-text" class="text-sm text-metallic mb-6"></p>
+        <button type="button" onclick="closeModal('sell-modal')" class="px-6 py-2.5 rounded-xl bg-champagne text-obsidian font-semibold text-sm hover:bg-champagne-light transition-colors">
+          Entendido
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL LEGAL ==================== -->
+  <div id="legal-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="legal-modal-title">
+    <div class="relative w-full max-w-2xl max-h-[88vh] overflow-y-auto bg-graphite border border-subtle rounded-2xl shadow-2xl p-6 sm:p-8">
+      <div class="flex items-center justify-between pb-4 mb-5 border-b border-subtle">
+        <h3 id="legal-modal-title" class="font-serif text-2xl font-bold text-smoke"></h3>
+        <button type="button" onclick="closeModal('legal-modal')" aria-label="Cerrar documento legal" class="p-2 rounded-xl border border-subtle text-metallic hover:text-smoke hover:border-champagne transition-colors">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <div id="legal-modal-body" class="space-y-4 text-sm text-metallic leading-relaxed"></div>
+      <div class="mt-8 pt-4 border-t border-subtle flex justify-end">
+        <button type="button" onclick="closeModal('legal-modal')" class="px-5 py-2.5 rounded-xl bg-champagne text-obsidian font-semibold text-sm hover:bg-champagne-light transition-colors">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== TOASTS ==================== -->
+  <div id="toast-container" class="fixed top-24 right-4 z-50 flex flex-col gap-2.5 max-w-sm w-[90vw] sm:w-auto pointer-events-none"></div>
+
+  <!-- ==================== LÓGICA JAVASCRIPT MODULAR ==================== -->
+  <script>
+    /**
+     * =========================================================================
+     * 1. MOTOR ROBUSTO DE IMÁGENES: CarImageEngine
+     * - Lotes (Batch) de 15 títulos a MediaWiki API (cero errores 429)
+     * - Respaldo automático en Wikimedia Commons (solo JPEG/WEBP, sin logos)
+     * - Galería real de hasta 3 fotos adicionales en Commons para el modal
+     * - Respaldo SVG elegante en Data URI (sin base64) si la red falla
+     * =========================================================================
+     */
+    const CarImageEngine = (() => {
+      const CACHE_PREFIX = 'ghm_img_v3_';
+      const memCache = new Map();
+      const galleryCache = new Map();
+      const EXCLUDED_KEYWORDS = [
+        'logo', 'badge', 'emblem', 'icon', 'flag', 'map', 'svg',
+        'interior', 'wheel', 'engine', 'dashboard', 'diagram',
+        'blueprint', 'patent', 'stamp', 'coat_of_arms', 'steering', 'key'
+      ];
+
+      // Genera un SVG elegante URL-encoded (no base64) para respaldo visual garantizado
+      function buildFallbackSVG(brand, model, year = '') {
+        const safeBrand = String(brand || 'GREYHOUND').replace(/[<>&"]/g, '');
+        const safeModel = String(model || 'MOTORSPORTS').replace(/[<>&"]/g, '');
+        const safeYear = year ? String(year).replace(/[<>&"]/g, '') : 'CERTIFICADO';
+        const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560" width="900" height="560">
+          <defs>
+            <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#0A0A0A"/>
+              <stop offset="55%" stop-color="#191714"/>
+              <stop offset="100%" stop-color="#0D0D0D"/>
+            </linearGradient>
+            <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#9E7F32"/>
+              <stop offset="50%" stop-color="#E0C370"/>
+              <stop offset="100%" stop-color="#9E7F32"/>
+            </linearGradient>
+          </defs>
+          <rect width="900" height="560" fill="url(#bg)"/>
+          <rect x="24" y="24" width="852" height="512" rx="18" fill="none" stroke="url(#gold)" stroke-opacity="0.35" stroke-width="1.5"/>
+          <path d="M180 325 C220 265, 305 220, 445 215 C560 212, 635 248, 705 288 C742 296, 755 316, 745 332 L175 332 Z" fill="none" stroke="url(#gold)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>
+          <circle cx="290" cy="332" r="34" fill="#0A0A0A" stroke="url(#gold)" stroke-width="3" opacity="0.85"/>
+          <circle cx="620" cy="332" r="34" fill="#0A0A0A" stroke="url(#gold)" stroke-width="3" opacity="0.85"/>
+          <line x1="120" y1="368" x2="780" y2="368" stroke="#262626" stroke-width="1.5"/>
+          <text x="450" y="120" text-anchor="middle" fill="#C9A84C" font-family="Georgia, serif" font-size="18" letter-spacing="6">GREYHOUND MOTORSPORTS</text>
+          <text x="450" y="432" text-anchor="middle" fill="#F5F5F5" font-family="Georgia, serif" font-size="34" font-weight="bold">${safeBrand} ${safeModel}</text>
+          <text x="450" y="472" text-anchor="middle" fill="#A3A3A3" font-family="Arial, sans-serif" font-size="17" letter-spacing="4">${safeYear}</text>
+        </svg>`;
+        return 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg);
+      }
+
+      function getCached(key) {
+        if (memCache.has(key)) return memCache.get(key);
+        try {
+          const val = sessionStorage.getItem(CACHE_PREFIX + key);
+          if (val) {
+            memCache.set(key, val);
+            return val;
+          }
+        } catch (_) {}
+        return null;
+      }
+
+      function setCached(key, url) {
+        if (!url) return;
+        memCache.set(key, url);
+        try {
+          sessionStorage.setItem(CACHE_PREFIX + key, url);
+        } catch (_) {}
+      }
+
+      function isValidCarPhoto(title, mime) {
+        if (mime !== 'image/jpeg' && mime !== 'image/webp') return false;
+        const lower = (title || '').toLowerCase();
+        return !EXCLUDED_KEYWORDS.some(kw => lower.includes(kw));
+      }
+
+      // 1. Consulta en lotes de 15 títulos a MediaWiki API
+      async function fetchWikiBatch(titles) {
+        const results = new Map();
+        const toFetch = [];
+
+        titles.forEach(t => {
+          const cached = getCached('wiki:' + t);
+          if (cached) {
+            results.set(t, cached);
+          } else {
+            toFetch.push(t);
+          }
+        });
+
+        const BATCH_SIZE = 15;
+        for (let i = 0; i < toFetch.length; i += BATCH_SIZE) {
+          const batch = toFetch.slice(i, i + BATCH_SIZE);
+          const titlesParam = batch.map(t => encodeURIComponent(t)).join('|');
+          const url = `https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&redirects=1&prop=pageimages&piprop=thumbnail&pithumbsize=900&titles=${titlesParam}`;
+
+          try {
+            const resp = await fetch(url);
+            if (!resp.ok) continue;
+            const data = await resp.json();
+            const query = data.query || {};
+
+            // Mapear normalizaciones y redirecciones para asociar exactamente cada título original
+            const normMap = new Map();
+            (query.normalized || []).forEach(n => normMap.set(n.from, n.to));
+
+            const redirMap = new Map();
+            (query.redirects || []).forEach(r => redirMap.set(r.from, r.to));
+
+            const pageThumbByTitle = new Map();
+            Object.values(query.pages || {}).forEach(page => {
+              if (page && page.title && page.thumbnail && page.thumbnail.source) {
+                const src = page.thumbnail.source;
+                if (!src.toLowerCase().endsWith('.svg') && !src.toLowerCase().includes('.svg.png')) {
+                  pageThumbByTitle.set(page.title, src);
+                }
+              }
+            });
+
+            batch.forEach(orig => {
+              let resolved = normMap.get(orig) || orig;
+              resolved = redirMap.get(resolved) || resolved;
+              const thumb = pageThumbByTitle.get(resolved) || pageThumbByTitle.get(orig) || null;
+              if (thumb) {
+                setCached('wiki:' + orig, thumb);
+                results.set(orig, thumb);
+              }
+            });
+          } catch (err) {
+            console.warn('Error en lote MediaWiki:', err);
+          }
+        }
+        return results;
+      }
+
+      // 2. Respaldo y búsqueda directa en Wikimedia Commons
+      async function searchCommons(brand, model, limit = 6) {
+        const key = `commons:${brand} ${model}:${limit}`;
+        if (galleryCache.has(key)) return galleryCache.get(key);
+
+        const q = encodeURIComponent(`${brand} ${model} car`);
+        const url = `https://commons.wikimedia.org/w/api.php?action=query&format=json&origin=*&generator=search&gsrnamespace=6&gsrsearch=${q}&gsrlimit=${limit}&prop=imageinfo&iiprop=url|mime&iiurlwidth=900`;
+
+        try {
+          const resp = await fetch(url);
+          if (!resp.ok) return [];
+          const data = await resp.json();
+          const pages = Object.values((data.query && data.query.pages) || {});
+          const validUrls = [];
+
+          pages.forEach(p => {
+            const info = p.imageinfo && p.imageinfo[0];
+            if (!info) return;
+            if (isValidCarPhoto(p.title, info.mime)) {
+              const imgUrl = info.thumburl || info.url;
+              if (imgUrl && !validUrls.includes(imgUrl)) {
+                validUrls.push(imgUrl);
+              }
+            }
+          });
+
+          galleryCache.set(key, validUrls);
+          if (validUrls[0]) {
+            setCached(`single:${brand} ${model}`, validUrls[0]);
+          }
+          return validUrls;
+        } catch (err) {
+          console.warn('Error en Wikimedia Commons:', err);
+          return [];
+        }
+      }
+
+      // 3. Precarga masiva del inventario (solo 3-4 peticiones HTTP en total)
+      async function preloadInventory(vehicles) {
+        const uniqueTitles = [...new Set(vehicles.map(v => v.wikiTitle).filter(Boolean))];
+        const batchMap = await fetchWikiBatch(uniqueTitles);
+
+        const missing = [];
+        vehicles.forEach(v => {
+          const found = batchMap.get(v.wikiTitle);
+          if (found) {
+            v.imageUrl = found;
+          } else {
+            missing.push(v);
+          }
+        });
+
+        // Actualizar tarjetas visibles inmediatamente con las fotos ya resueltas
+        updateRenderedCardImages();
+
+        // Resolver cualquier faltante en segundo plano vía Wikimedia Commons
+        for (const v of missing) {
+          const commonsUrls = await searchCommons(v.brand, v.model, 6);
+          v.imageUrl = commonsUrls[0] || buildFallbackSVG(v.brand, v.model, v.year);
+          setCached('wiki:' + v.wikiTitle, v.imageUrl);
+          updateSingleCardImage(v.id, v.imageUrl);
+        }
+      }
+
+      // 4. Obtener foto única para Hero o panel Bajo Pedido
+      async function getSingleCarImage(brand, model, year = '') {
+        const cacheKey = `single:${brand} ${model}`;
+        const cached = getCached(cacheKey);
+        if (cached) return cached;
+
+        const wikiTitle = `${brand} ${model}`;
+        const wikiMap = await fetchWikiBatch([wikiTitle]);
+        if (wikiMap.get(wikiTitle)) {
+          setCached(cacheKey, wikiMap.get(wikiTitle));
+          return wikiMap.get(wikiTitle);
+        }
+
+        const commonsUrls = await searchCommons(brand, model, 6);
+        if (commonsUrls[0]) {
+          setCached(cacheKey, commonsUrls[0]);
+          return commonsUrls[0];
+        }
+
+        return buildFallbackSVG(brand, model, year);
+      }
+
+      // 5. Obtener galería adicional (hasta 3 fotos extra) para el Modal de Ficha Técnica
+      async function getVehicleGallery(vehicle) {
+        const mainUrl = vehicle.imageUrl || await getSingleCarImage(vehicle.brand, vehicle.model, vehicle.year);
+        const extras = await searchCommons(vehicle.brand, vehicle.model, 8);
+        const gallery = [mainUrl];
+        for (const url of extras) {
+          if (gallery.length >= 4) break;
+          if (!gallery.includes(url)) gallery.push(url);
+        }
+        return gallery;
+      }
+
+      return {
+        buildFallbackSVG,
+        preloadInventory,
+        getSingleCarImage,
+        getVehicleGallery
+      };
+    })();
+
+    /**
+     * =========================================================================
+     * 2. DIRECTORIO UNIVERSAL MASIVO (47 MARCAS · +430 MODELOS REALES)
+     * =========================================================================
+     */
+    const CAR_DIRECTORY = {
+      'Acura': ['NSX', 'Integra Type S', 'TLX Type S', 'MDX Type S', 'RDX', 'RSX Type-S', 'ILX', 'ZDX'],
+      'Alfa Romeo': ['Giulia Quadrifoglio', 'Stelvio Quadrifoglio', '4C Spider', '8C Competizione', 'Tonale', 'GTV', 'Spider', 'Brera'],
+      'Aston Martin': ['DB11', 'DB12', 'Vantage', 'DBS Superleggera', 'DBX707', 'Valkyrie', 'Valour', 'Vanquish', 'Rapide S'],
+      'Audi': ['R8', 'RS 6 Avant', 'RS 7', 'RS 3', 'RS 5', 'RS Q8', 'TT RS', 'S4', 'S5', 'e-tron GT', 'Q8', 'A5', 'A7'],
+      'Bentley': ['Continental GT', 'Flying Spur', 'Bentayga', 'Batur', 'Mulsanne', 'Bacalar', 'Arnage', 'Brooklands'],
+      'BMW': ['M3', 'M4', 'M5', 'M2', 'M8 Competition', 'X5 M', 'X6 M', 'Z4 M40i', 'i8', 'i4 M50', 'M340i', '330i', '760i', 'XM'],
+      'Bugatti': ['Chiron', 'Veyron', 'Tourbillon', 'Divo', 'Mistral', 'Bolide', 'Centodieci', 'EB110'],
+      'Cadillac': ['Escalade', 'Escalade-V', 'CT5-V Blackwing', 'CT4-V Blackwing', 'Lyriq', 'XT6', 'Celestiq', 'ATS-V', 'CTS-V'],
+      'Chevrolet': ['Corvette C8', 'Corvette Z06', 'Camaro ZL1', 'Camaro SS', 'Cheyenne', 'Silverado 1500', 'Suburban', 'Tahoe', 'Blazer', 'Impala SS', 'Chevelle SS'],
+      'Chrysler': ['300C', '300 SRT8', 'Pacifica', 'Crossfire SRT-6', 'Viper GTS', 'Prowler', 'PT Cruiser GT'],
+      'Cupra': ['Formentor VZ5', 'León VZ', 'Ateca VZ', 'Born', 'Tavascan', 'Terramar', 'Ibiza Cupra'],
+      'Dodge': ['Challenger SRT Hellcat', 'Challenger SRT Demon', 'Charger SRT Hellcat', 'Viper ACR', 'Durango SRT Hellcat', 'Hornet', 'RAM SRT-10'],
+      'Ferrari': ['296 GTB', 'F8 Tributo', 'LaFerrari', 'SF90 Stradale', '812 Superfast', 'Roma', 'Purosangue', '488 Pista', '458 Italia', 'Enzo', 'F40', 'F50', '12Cilindri'],
+      'Fiat': ['500 Abarth', '124 Spider Abarth', 'Pulse Abarth', 'Fastback', '500e', 'Argo', 'Mobi', 'Barchetta'],
+      'Ford': ['Mustang GT', 'Mustang Shelby GT500', 'Mustang Dark Horse', 'GT', 'F-150 Raptor', 'F-150', 'Bronco Raptor', 'Focus RS', 'Ranger Raptor', 'Explorer ST', 'Maverick', 'Lobo'],
+      'Genesis': ['G70', 'G80', 'G90', 'GV70', 'GV80', 'GV60', 'Coupe 3.8'],
+      'GMC': ['Sierra Denali', 'Sierra 1500 AT4X', 'Yukon Denali', 'Hummer EV', 'Canyon AT4X', 'Acadia', 'Terrain'],
+      'Honda': ['Civic Type R', 'NSX', 'S2000', 'Accord', 'Civic Si', 'CR-V', 'Pilot', 'Odyssey', 'HR-V', 'Integra Type R', 'Prelude', 'CR-X', 'Ridgeline'],
+      'Hyundai': ['Elantra N', 'Ioniq 5 N', 'Veloster N', 'Kona N', 'Tucson', 'Santa Fe', 'Palisade', 'Sonata N Line', 'Genesis Coupe'],
+      'Infiniti': ['Q60 Red Sport 400', 'Q50 Red Sport 400', 'QX80', 'QX60', 'QX55', 'G37 Coupe', 'FX50'],
+      'Jaguar': ['F-Type R', 'F-Pace SVR', 'XE SV Project 8', 'XF', 'E-Type', 'XJ220', 'I-Pace', 'XKR-S'],
+      'Jeep': ['Wrangler Rubicon 392', 'Wrangler', 'Grand Cherokee Trackhawk', 'Gladiator', 'Wagoneer', 'Grand Wagoneer', 'Compass'],
+      'Kia': ['Stinger GT', 'EV6 GT', 'K5 GT', 'Telluride', 'Sportage', 'Sorento', 'Forte GT', 'EV9'],
+      'Koenigsegg': ['Jesko', 'Agera RS', 'Regera', 'Gemera', 'CC850', 'CCX', 'One:1'],
+      'Lamborghini': ['Huracán', 'Revuelto', 'Urus', 'Aventador SVJ', 'Gallardo', 'Murciélago', 'Diablo', 'Countach', 'Sián', 'Temerario'],
+      'Land Rover': ['Range Rover', 'Range Rover Sport SV', 'Defender 110 V8', 'Range Rover Velar', 'Range Rover Evoque', 'Discovery'],
+      'Lexus': ['LFA', 'LC 500', 'RC F', 'IS 500 F Sport', 'LX 600', 'GX 550', 'RX 500h', 'LS 500', 'GS F'],
+      'Lotus': ['Emira', 'Evija', 'Eletre', 'Exige', 'Elise', 'Evora GT', 'Esprit V8'],
+      'Maserati': ['MC20', 'GranTurismo', 'GranCabrio', 'Grecale Trofeo', 'Levante Trofeo', 'Quattroporte', 'Ghibli Trofeo'],
+      'Mazda': ['RX-7', 'MX-5', 'RX-8', 'Mazda3 Turbo', 'CX-90', 'CX-50', 'CX-5', 'Mazda6', 'Mazdaspeed3'],
+      'McLaren': ['720S', '750S', '765LT', 'Artura', 'P1', 'Senna', '600LT', '570S', 'GT', 'Speedtail', 'F1'],
+      'Mercedes-Benz': ['AMG GT', 'G-Class', 'AMG G 63', 'AMG C 63', 'AMG E 63', 'AMG S 63', 'SLS AMG', 'SL 63 AMG', 'AMG A 45', 'GLE 63 AMG', 'Maybach S 680', '300 SL'],
+      'Mini': ['John Cooper Works', 'Cooper S', 'Countryman JCW', 'Clubman JCW', 'GP3', 'Convertible S'],
+      'Mitsubishi': ['Lancer Evolution', '3000GT', 'Eclipse', 'Lancer Evolution IX', 'Lancer Evolution X', 'Eclipse GSX', 'Montero Sport', 'L200', 'Outlander', 'Starion', 'Galant VR-4'],
+      'Nissan': ['GT-R', 'Skyline GT-R', 'Z', '370Z Nismo', '350Z', 'Silvia S15', '240SX', 'Sentra Nismo', 'Frontier PRO-4X', 'Patrol Nismo', 'Armada', 'Altima'],
+      'Pagani': ['Huayra', 'Zonda', 'Utopia', 'Huayra R', 'Zonda Cinque', 'Zonda R'],
+      'Peugeot': ['208 GT', '308 GT', '508 PSE', '3008 GT', 'RCZ R', '205 GTi', '408'],
+      'Porsche': ['911 GT3', '911 GT3 RS', '911 Turbo S', 'Taycan', 'Cayenne', '718 Cayman GT4 RS', 'Panamera Turbo', 'Macan GTS', 'Carrera GT', '918 Spyder', '356 Speedster', '959'],
+      'RAM': ['1500', '1500 TRX', '1500 RHO', '2500 Power Wagon', '1500 Limited', '1500 Rebel', '700'],
+      'Renault': ['Mégane R.S.', 'Clio R.S.', 'Alpine A110', 'Koleos', 'Duster', 'Kwid', 'R5 Turbo'],
+      'Rolls-Royce': ['Cullinan', 'Ghost', 'Phantom', 'Spectre', 'Wraith', 'Dawn', 'Boat Tail'],
+      'Subaru': ['Impreza WRX STI', 'WRX', 'BRZ', 'Forester', 'Outback Wilderness', 'Crosstrek', 'Legacy GT', '22B STI'],
+      'Suzuki': ['Swift Sport', 'Jimny', 'Vitara Boosterjet', 'Grand Vitara', 'Baleno', 'Ignis', 'Cappuccino'],
+      'Tesla': ['Model S', 'Model S Plaid', 'Model 3 Performance', 'Model X Plaid', 'Model Y Performance', 'Cybertruck', 'Roadster'],
+      'Toyota': ['GR Supra', 'GR Yaris', 'Tacoma', 'Land Cruiser', 'AE86', 'GR Corolla', 'GR86', 'Tundra TRD Pro', '4Runner', 'Camry', 'Corolla', 'Hilux', 'MR2', '2000GT', 'Sequoia'],
+      'Volkswagen': ['Golf GTI', 'Golf R', 'Jetta GLI', 'Teramont', 'Tiguan R-Line', 'Arteon', 'Scirocco R', 'Beetle Turbo', 'Amarok V6', 'ID.4'],
+      'Volvo': ['XC90', 'XC60 Polestar', 'S60 Polestar', 'V60 Polestar', 'EX30', 'EX90', 'C40 Recharge', '850 T-5R']
+    };
+
+    /**
+     * =========================================================================
+     * 3. PAQUETES DE PERSONALIZACIÓN WHITE GLOVE
+     * =========================================================================
+     */
+    const CUSTOMIZATION_PACKAGES = [
+      { id: 'dyno', name: 'Dyno Tuning / Stage 2', desc: 'Reprogramación en dinamómetro y validación de potencia.', price: 85000 },
+      { id: 'ppf', name: 'Protección PPF + Cerámico', desc: 'Película autorregenerable completa + recubrimiento 9H.', price: 95000 },
+      { id: 'wheels', name: 'Rines Forjados a la Medida', desc: 'Juego de rines forjados ultraligeros con llantas Michelin.', price: 140000 },
+      { id: 'exhaust', name: 'Sistema de Escape Deportivo', desc: 'Escape cat-back en acero inoxidable o titanio con válvulas.', price: 110000 },
+      { id: 'interior', name: 'Interior Piel / Alcántara', desc: 'Tapicería personalizada, volante deportivo y costuras a elección.', price: 130000 }
+    ];
+
+    /**
+     * =========================================================================
+     * 4. CATÁLOGO VERIFICADO (51 VEHÍCULOS CON WIKITITLE EXACTOS)
+     * Cubre las 5 categorías: Comercial, Deportivo, Lujo, Exótico y Colección
+     * =========================================================================
+     */
+    const RAW_INVENTORY = [
+      // HONDA (4)
+      { id: 'honda-civic-type-r', brand: 'Honda', model: 'Civic Type R', wikiTitle: 'Honda Civic Type R', category: 'Deportivo', city: 'Tijuana', year: 2024, price: 1185000, mileage: '3,200 km', engine: '2.0L VTEC Turbo I4', hp: 315, acc: '5.3 s', trans: 'Manual 6 Vel.', retention: '+6% Retención JDM', trend: 1.06, desc: 'Generación FL5 con frenos Brembo, asientos deportivos rojos y telemetría Honda LogR.' },
+      { id: 'honda-nsx', brand: 'Honda', model: 'NSX', wikiTitle: 'Honda NSX', category: 'Exótico', city: 'Monterrey', year: 2021, price: 4250000, mileage: '6,800 km', engine: '3.5L V6 Biturbo Híbrido', hp: 573, acc: '2.9 s', trans: 'DCT 9 Vel. SH-AWD', retention: '+14% Valorización', trend: 1.14, desc: 'Superdeportivo híbrido de ingeniería japonesa con tracción vectorial eléctrica y frenos carbono-cerámicos.' },
+      { id: 'honda-s2000', brand: 'Honda', model: 'S2000', wikiTitle: 'Honda S2000', category: 'Colección', city: 'Tijuana', year: 2006, price: 920000, mileage: '42,500 km', engine: '2.2L F22C1 Atmosférico', hp: 237, acc: '5.8 s', trans: 'Manual 6 Vel.', retention: '+22% Apreciación Clásico', trend: 1.22, desc: 'Roadster AP2 original sin modificaciones invasivas, capota en excelente estado e historial verificado.' },
+      { id: 'honda-accord', brand: 'Honda', model: 'Accord', wikiTitle: 'Honda Accord', category: 'Comercial', city: 'CDMX', year: 2024, price: 745000, mileage: '11,400 km', engine: '2.0L Híbrido i-MMD', hp: 204, acc: '6.7 s', trans: 'e-CVT', retention: '81% Retención a 5 años', trend: 0.81, desc: 'Sedán ejecutivo híbrido versión Touring con sonido Bose, Honda Sensing y servicios de agencia.' },
+
+      // MITSUBISHI (3)
+      { id: 'mitsubishi-evo', brand: 'Mitsubishi', model: 'Lancer Evolution', wikiTitle: 'Mitsubishi Lancer Evolution', category: 'Colección', city: 'Tijuana', year: 2006, price: 1290000, mileage: '54,000 km', engine: '2.0L 4G63T Turbo', hp: 286, acc: '4.8 s', trans: 'Manual 6 Vel. AWD', retention: '+25% Icono Rally', trend: 1.25, desc: 'Lancer Evolution IX MR con amortiguadores Bilstein, rines BBS forjados y pedimento validado.' },
+      { id: 'mitsubishi-3000gt', brand: 'Mitsubishi', model: '3000GT', wikiTitle: 'Mitsubishi GTO', category: 'Colección', city: 'Monterrey', year: 1996, price: 890000, mileage: '61,200 km', engine: '3.0L V6 Twin-Turbo', hp: 320, acc: '4.9 s', trans: 'Manual 6 Vel. AWD', retention: '+18% Valorización JDM', trend: 1.18, desc: 'Versión VR-4 con aerodinámica activa, dirección en las 4 ruedas e historial completo de conservación.' },
+      { id: 'mitsubishi-eclipse', brand: 'Mitsubishi', model: 'Eclipse', wikiTitle: 'Mitsubishi Eclipse', category: 'Colección', city: 'Guadalajara', year: 1999, price: 540000, mileage: '68,000 km', engine: '2.0L 4G63T Turbo AWD', hp: 210, acc: '6.4 s', trans: 'Manual 5 Vel.', retention: '+15% Clásico 90s', trend: 1.15, desc: 'Eclipse GSX 2G de colección en estado sobresaliente, pintura restaurada y mecánica auditada.' },
+
+      // TOYOTA (5)
+      { id: 'toyota-gr-supra', brand: 'Toyota', model: 'GR Supra', wikiTitle: 'Toyota Supra', category: 'Deportivo', city: 'Monterrey', year: 2024, price: 1480000, mileage: '4,100 km', engine: '3.0L Turbo I6 B58', hp: 382, acc: '3.9 s', trans: 'Manual 6 Vel.', retention: '92% Retención a 5 años', trend: 0.92, desc: 'GR Supra 3.0 con transmisión manual, diferencial activo y protección PPF en frente.' },
+      { id: 'toyota-gr-yaris', brand: 'Toyota', model: 'GR Yaris', wikiTitle: 'Toyota GR Yaris', category: 'Deportivo', city: 'CDMX', year: 2024, price: 965000, mileage: '2,900 km', engine: '1.6L Turbo 3 Cil. G16E', hp: 268, acc: '5.2 s', trans: 'Manual 6 Vel. GR-FOUR', retention: '+10% Edición Homologación', trend: 1.10, desc: 'Circuit Pack con diferenciales Torsen delantero y trasero, techo de carbono y rines BBS.' },
+      { id: 'toyota-tacoma', brand: 'Toyota', model: 'Tacoma', wikiTitle: 'Toyota Tacoma', category: 'Comercial', city: 'Tijuana', year: 2024, price: 1120000, mileage: '6,500 km', engine: '2.4L i-FORCE MAX Híbrido', hp: 326, acc: '7.0 s', trans: 'Automática 8 Vel. 4x4', retention: '88% Retención Líder', trend: 0.88, desc: 'Tacoma TRD Pro equipada con suspensión FOX QS3, asientos IsoDynamic y factura original.' },
+      { id: 'toyota-land-cruiser', brand: 'Toyota', model: 'Land Cruiser', wikiTitle: 'Toyota Land Cruiser', category: 'Lujo', city: 'Guadalajara', year: 2024, price: 1790000, mileage: '5,100 km', engine: '2.4L i-FORCE MAX 4WD', hp: 326, acc: '7.7 s', trans: 'Automática 8 Vel.', retention: '90% Retención a 5 años', trend: 0.90, desc: 'First Edition con bloqueo de diferencial central y trasero, piel premium y capacidad todoterreno total.' },
+      { id: 'toyota-ae86', brand: 'Toyota', model: 'AE86', wikiTitle: 'Toyota AE86', category: 'Colección', city: 'Tijuana', year: 1986, price: 880000, mileage: '94,000 km', engine: '1.6L 4A-GE Twin-Cam', hp: 128, acc: '8.3 s', trans: 'Manual 5 Vel. RWD', retention: '+28% Apreciación JDM', trend: 1.28, desc: 'Corolla GT-S Trueno hatchback en configuración Panda, restauración fiel y documentación legal al día.' },
+
+      // NISSAN (3)
+      { id: 'nissan-gtr', brand: 'Nissan', model: 'GT-R', wikiTitle: 'Nissan GT-R', category: 'Deportivo', city: 'Monterrey', year: 2024, price: 3350000, mileage: '2,400 km', engine: '3.8L V6 Biturbo VR38', hp: 565, acc: '2.7 s', trans: 'DCT 6 Vel. ATTESA AWD', retention: '+12% Últimos R35', trend: 1.12, desc: 'GT-R Premium T-Spec con motor ensamblado a mano Takumi, frenos Brembo y escape de titanio.' },
+      { id: 'nissan-skyline-gtr', brand: 'Nissan', model: 'Skyline GT-R', wikiTitle: 'Nissan Skyline GT-R', category: 'Colección', city: 'Tijuana', year: 1999, price: 3950000, mileage: '58,400 km', engine: '2.6L RB26DETT Twin-Turbo', hp: 280, acc: '4.6 s', trans: 'Getrag Manual 6 Vel.', retention: '+32% Apreciación R34', trend: 1.32, desc: 'Skyline GT-R R34 V-Spec en Bayside Blue, display multifunción original e importación legal definitiva.' },
+      { id: 'nissan-z', brand: 'Nissan', model: 'Z', wikiTitle: 'Nissan Z (RZ34)', category: 'Deportivo', city: 'CDMX', year: 2024, price: 1340000, mileage: '1,950 km', engine: '3.0L V6 Biturbo VR30', hp: 400, acc: '4.3 s', trans: 'Manual 6 Vel.', retention: '86% Retención a 5 años', trend: 0.86, desc: 'Nissan Z Performance con diferencial mecánico LSD, rines RAYS forjados de 19 pulgadas y factura original.' },
+
+      // MAZDA (2)
+      { id: 'mazda-rx7', brand: 'Mazda', model: 'RX-7', wikiTitle: 'Mazda RX-7', category: 'Colección', city: 'Guadalajara', year: 1995, price: 1450000, mileage: '49,800 km', engine: '1.3L 13B-REW Twin-Turbo', hp: 255, acc: '5.1 s', trans: 'Manual 5 Vel. RWD', retention: '+24% Clásico Rotativo', trend: 1.24, desc: 'FD3S con compresión rotativa certificada, carrocería sin accidentes y conservación de colección.' },
+      { id: 'mazda-mx5', brand: 'Mazda', model: 'MX-5', wikiTitle: 'Mazda MX-5', category: 'Comercial', city: 'CDMX', year: 2024, price: 585000, mileage: '4,600 km', engine: '2.0L Skyactiv-G I4', hp: 181, acc: '6.5 s', trans: 'Manual 6 Vel.', retention: '83% Retención a 5 años', trend: 0.83, desc: 'MX-5 RF Grand Touring con techo rígido retráctil, piel Terracota y sonido Bose integrado.' },
+
+      // SUBARU (1)
+      { id: 'subaru-wrx-sti', brand: 'Subaru', model: 'Impreza WRX STI', wikiTitle: 'Subaru Impreza WRX STI', category: 'Deportivo', city: 'Tijuana', year: 2021, price: 980000, mileage: '19,200 km', engine: '2.5L Boxer Turbo EJ25', hp: 310, acc: '4.7 s', trans: 'Manual 6 Vel. DCCD AWD', retention: '+11% Última Generación STI', trend: 1.11, desc: 'WRX STI en World Rally Blue con frenos Brembo de 6 pistones, alerón OEM y servicios al corriente.' },
+
+      // PORSCHE (3)
+      { id: 'porsche-911-gt3', brand: 'Porsche', model: '911 GT3', wikiTitle: 'Porsche 911 GT3', category: 'Deportivo', city: 'Tijuana', year: 2024, price: 5950000, mileage: '2,100 km', engine: '4.0L Flat-6 Atmosférico', hp: 510, acc: '3.4 s', trans: 'PDK 7 Vel.', retention: '+14% Valorización GT', trend: 1.14, desc: '992 GT3 con asientos tipo cubo en carbono, frenos PCCB, elevador de eje delantero y PPF completo.' },
+      { id: 'porsche-taycan', brand: 'Porsche', model: 'Taycan', wikiTitle: 'Porsche Taycan', category: 'Lujo', city: 'CDMX', year: 2024, price: 3450000, mileage: '5,200 km', engine: 'Dual Motor Eléctrico', hp: 670, acc: '3.2 s', trans: '2 Vel. AWD', retention: '79% Retención Eléctrico', trend: 0.79, desc: 'Taycan Turbo con batería Performance Plus, suspensión neumática adaptativa y carga rápida 800V.' },
+      { id: 'porsche-cayenne', brand: 'Porsche', model: 'Cayenne', wikiTitle: 'Porsche Cayenne', category: 'Lujo', city: 'Monterrey', year: 2025, price: 2980000, mileage: '3,400 km', engine: '4.0L V8 Biturbo', hp: 650, acc: '3.3 s', trans: 'Tiptronic S 8 Vel.', retention: '84% Retención a 5 años', trend: 0.84, desc: 'Cayenne Turbo GT Coupé con techo de carbono, escape de titanio central y sonido Burmester 3D.' },
+
+      // FERRARI (3)
+      { id: 'ferrari-f8-tributo', brand: 'Ferrari', model: 'F8 Tributo', wikiTitle: 'Ferrari F8', category: 'Exótico', city: 'Monterrey', year: 2023, price: 8450000, mileage: '2,800 km', engine: '3.9L V8 Biturbo', hp: 720, acc: '2.9 s', trans: 'F1 DCT 7 Vel.', retention: '+9% Último V8 Puro', trend: 1.09, desc: 'Rosso Corsa con interior Cuoio, paquete exterior en fibra de carbono y mantenimiento Ferrari 7 años.' },
+      { id: 'ferrari-296-gtb', brand: 'Ferrari', model: '296 GTB', wikiTitle: 'Ferrari 296', category: 'Exótico', city: 'CDMX', year: 2024, price: 8950000, mileage: '1,350 km', engine: '3.0L V6 Biturbo Híbrido', hp: 830, acc: '2.9 s', trans: 'F1 DCT 8 Vel.', retention: '94% Retención a 5 años', trend: 0.94, desc: 'Especificación Assetto Fiorano con suspensión Multimatic, llantas Michelin Cup 2 R y garantía oficial.' },
+      { id: 'ferrari-laferrari', brand: 'Ferrari', model: 'LaFerrari', wikiTitle: 'LaFerrari', category: 'Colección', city: 'Monterrey', year: 2015, price: 78000000, mileage: '1,900 km', engine: '6.3L V12 HY-KERS', hp: 963, acc: '2.6 s', trans: 'F1 DCT 7 Vel.', retention: '+30% Hiperauto Inversión', trend: 1.30, desc: 'Pieza de grado museo con certificación Ferrari Classiche, batería híbrida con servicio oficial y dossier completo.' },
+
+      // LAMBORGHINI (3)
+      { id: 'lamborghini-huracan', brand: 'Lamborghini', model: 'Huracán', wikiTitle: 'Lamborghini Huracán', category: 'Exótico', city: 'Guadalajara', year: 2024, price: 7450000, mileage: '2,600 km', engine: '5.2L V10 Atmosférico', hp: 640, acc: '3.2 s', trans: 'LDF DCT 7 Vel.', retention: '+10% Último V10', trend: 1.10, desc: 'Huracán Tecnica con dirección en eje trasero, sistema LDVI y acabados interiores en Alcántara.' },
+      { id: 'lamborghini-revuelto', brand: 'Lamborghini', model: 'Revuelto', wikiTitle: 'Lamborghini Revuelto', category: 'Exótico', city: 'CDMX', year: 2025, price: 16900000, mileage: '650 km', engine: '6.5L V12 + 3 Motores Eléc.', hp: 1015, acc: '2.5 s', trans: 'DCT 8 Vel. AWD', retention: '+12% Hiperdeportivo V12', trend: 1.12, desc: 'Buque insignia HPEV con monocasco Monofuselage en carbono, paquete Ad Personam y entrega inmediata.' },
+      { id: 'lamborghini-urus', brand: 'Lamborghini', model: 'Urus', wikiTitle: 'Lamborghini Urus', category: 'Lujo', city: 'Monterrey', year: 2024, price: 6650000, mileage: '4,200 km', engine: '4.0L V8 Biturbo', hp: 666, acc: '3.3 s', trans: 'Automática 8 Vel. AWD', retention: '88% Retención a 5 años', trend: 0.88, desc: 'Urus Performante con cofre en fibra de carbono, escape Akrapovič de titanio y rines de 23 pulgadas.' },
+
+      // BMW (3)
+      { id: 'bmw-m3', brand: 'BMW', model: 'M3', wikiTitle: 'BMW M3', category: 'Deportivo', city: 'CDMX', year: 2024, price: 2290000, mileage: '5,400 km', engine: '3.0L TwinPower Turbo I6', hp: 510, acc: '3.5 s', trans: 'M Steptronic 8 Vel. xDrive', retention: '87% Retención a 5 años', trend: 0.87, desc: 'M3 Competition M xDrive en Isle of Man Green con asientos M Carbon Bucket y paquete exterior carbono.' },
+      { id: 'bmw-m4', brand: 'BMW', model: 'M4', wikiTitle: 'BMW M4', category: 'Deportivo', city: 'Guadalajara', year: 2024, price: 2420000, mileage: '3,900 km', engine: '3.0L TwinPower Turbo I6', hp: 510, acc: '3.5 s', trans: 'M Steptronic 8 Vel. xDrive', retention: '87% Retención a 5 años', trend: 0.87, desc: 'M4 Competition Coupé con faros láser, frenos M Compound y servicio de agencia vigente.' },
+      { id: 'bmw-m5', brand: 'BMW', model: 'M5', wikiTitle: 'BMW M5', category: 'Lujo', city: 'Monterrey', year: 2023, price: 2790000, mileage: '9,100 km', engine: '4.4L V8 Biturbo', hp: 625, acc: '3.3 s', trans: 'M Steptronic 8 Vel. xDrive', retention: '85% Retención a 5 años', trend: 0.85, desc: 'M5 Competition F90 con techo de fibra de carbono, sonido Bowers & Wilkins y protección cerámica.' },
+
+      // MERCEDES-BENZ (2)
+      { id: 'mercedes-amg-gt', brand: 'Mercedes-Benz', model: 'AMG GT', wikiTitle: 'Mercedes-AMG GT', category: 'Deportivo', city: 'CDMX', year: 2024, price: 4450000, mileage: '2,200 km', engine: '4.0L V8 Biturbo', hp: 585, acc: '3.2 s', trans: 'AMG SPEEDSHIFT 9G AWD', retention: '88% Retención a 5 años', trend: 0.88, desc: 'AMG GT 63 Coupé con aerodinámica activa, eje trasero direccional y pintura Manufaktur.' },
+      { id: 'mercedes-g-class', brand: 'Mercedes-Benz', model: 'G-Class', wikiTitle: 'Mercedes-Benz G-Class', category: 'Lujo', city: 'CDMX', year: 2025, price: 5390000, mileage: '3,100 km', engine: '4.0L V8 Biturbo Mild-Hybrid', hp: 585, acc: '4.4 s', trans: 'AMG SPEEDSHIFT 9G', retention: '89% Retención a 5 años', trend: 0.89, desc: 'AMG G 63 Negro Noche Magno con interior Nappa diamante, sonido Burmester 3D y PPF completo.' },
+
+      // AUDI (2)
+      { id: 'audi-r8', brand: 'Audi', model: 'R8', wikiTitle: 'Audi R8', category: 'Exótico', city: 'Tijuana', year: 2023, price: 4750000, mileage: '4,800 km', engine: '5.2L V10 Atmosférico', hp: 620, acc: '3.1 s', trans: 'S tronic 7 Vel. quattro', retention: '+12% Edición Final V10', trend: 1.12, desc: 'R8 V10 Performance quattro con frenos cerámicos, sideblades de carbono y escape deportivo.' },
+      { id: 'audi-rs6', brand: 'Audi', model: 'RS 6 Avant', wikiTitle: 'Audi RS 6', category: 'Lujo', city: 'Monterrey', year: 2024, price: 3250000, mileage: '6,200 km', engine: '4.0L V8 Biturbo', hp: 630, acc: '3.4 s', trans: 'Tiptronic 8 Vel. quattro', retention: '89% Retención a 5 años', trend: 0.89, desc: 'RS 6 Avant Performance en Gris Nardo, paquete óptico negro brillante y audio Bang & Olufsen 3D.' },
+
+      // FORD (3)
+      { id: 'ford-mustang', brand: 'Ford', model: 'Mustang', wikiTitle: 'Ford Mustang', category: 'Deportivo', city: 'Guadalajara', year: 2024, price: 1390000, mileage: '2,800 km', engine: '5.0L Coyote V8', hp: 500, acc: '3.9 s', trans: 'Tremec Manual 6 Vel.', retention: '86% Retención a 5 años', trend: 0.86, desc: 'Mustang Dark Horse con suspensión MagneRide, frenos Brembo y enfriadores de pista.' },
+      { id: 'ford-gt', brand: 'Ford', model: 'GT', wikiTitle: 'Ford GT', category: 'Exótico', city: 'Monterrey', year: 2021, price: 24500000, mileage: '1,100 km', engine: '3.5L EcoBoost V6 Biturbo', hp: 660, acc: '2.9 s', trans: 'Getrag DCT 7 Vel.', retention: '+20% Edición Coleccionable', trend: 1.20, desc: 'Monocasco y rines en fibra de carbono, aerodinámica activa de Le Mans y procedencia verificada.' },
+      { id: 'ford-f150', brand: 'Ford', model: 'F-150', wikiTitle: 'Ford F-Series', category: 'Comercial', city: 'Tijuana', year: 2024, price: 2350000, mileage: '7,400 km', engine: '5.2L V8 Supercargado', hp: 720, acc: '3.7 s', trans: 'Automática 10 Vel. 4x4', retention: '90% Retención Raptor R', trend: 0.90, desc: 'F-150 Raptor R con neumáticos de 37 pulgadas, amortiguadores FOX Dual Live Valve y factura original.' },
+
+      // CHEVROLET (2)
+      { id: 'chevrolet-corvette-c8', brand: 'Chevrolet', model: 'Corvette C8', wikiTitle: 'Chevrolet Corvette (C8)', category: 'Deportivo', city: 'Guadalajara', year: 2024, price: 3490000, mileage: '1,800 km', engine: '5.5L V8 Flat-Plane LT6', hp: 670, acc: '2.6 s', trans: 'Tremec DCT 8 Vel.', retention: '+8% Z06 Atmosférico', trend: 1.08, desc: 'Corvette C8 Z06 3LZ con paquete Z07, frenos carbono-cerámicos y motor V8 de 8,600 rpm.' },
+      { id: 'chevrolet-camaro', brand: 'Chevrolet', model: 'Camaro', wikiTitle: 'Chevrolet Camaro', category: 'Deportivo', city: 'Monterrey', year: 2024, price: 1850000, mileage: '3,300 km', engine: '6.2L V8 Supercargado LT4', hp: 650, acc: '3.5 s', trans: 'Manual 6 Vel.', retention: '+9% Último Año ZL1', trend: 1.09, desc: 'Camaro ZL1 1LE con suspensión Multimatic DSSV, alerón de carbono y asientos Recaro.' },
+
+      // DODGE (1)
+      { id: 'dodge-challenger', brand: 'Dodge', model: 'Challenger', wikiTitle: 'Dodge Challenger', category: 'Deportivo', city: 'Tijuana', year: 2023, price: 2150000, mileage: '2,900 km', engine: '6.2L HEMI V8 Supercargado', hp: 797, acc: '3.4 s', trans: 'TorqueFlite 8 Vel.', retention: '+11% Last Call Redeye', trend: 1.11, desc: 'Challenger SRT Hellcat Redeye Widebody edición Last Call con llave roja y certificación legal.' },
+
+      // MCLAREN (1)
+      { id: 'mclaren-720s', brand: 'McLaren', model: '720S', wikiTitle: 'McLaren 720S', category: 'Exótico', city: 'Guadalajara', year: 2023, price: 7850000, mileage: '3,600 km', engine: '4.0L V8 Biturbo', hp: 720, acc: '2.8 s', trans: 'SSG 7 Vel.', retention: '90% Retención a 5 años', trend: 0.90, desc: '720S Spider Performance con monocasco Monocage II-S en carbono, puertas diédricas y lift frontal.' },
+
+      // ASTON MARTIN (1)
+      { id: 'aston-martin-db11', brand: 'Aston Martin', model: 'DB11', wikiTitle: 'Aston Martin DB11', category: 'Lujo', city: 'CDMX', year: 2023, price: 4890000, mileage: '5,900 km', engine: '5.2L V12 Biturbo', hp: 630, acc: '3.7 s', trans: 'ZF Automática 8 Vel.', retention: '85% Retención a 5 años', trend: 0.85, desc: 'DB11 AMR V12 en Aston Martin Racing Green, interior piel Bridge of Weir y audio Bang & Olufsen.' },
+
+      // ROLLS-ROYCE (1)
+      { id: 'rolls-royce-cullinan', brand: 'Rolls-Royce', model: 'Cullinan', wikiTitle: 'Rolls-Royce Cullinan', category: 'Lujo', city: 'CDMX', year: 2024, price: 12900000, mileage: '2,700 km', engine: '6.75L V12 Biturbo', hp: 600, acc: '4.9 s', trans: 'ZF 8 Vel. AWD', retention: '86% Retención a 5 años', trend: 0.86, desc: 'Cullinan Black Badge con techo Starlight, puertas suicidas eléctricas y acabados en fibra técnica.' },
+
+      // BENTLEY (1)
+      { id: 'bentley-continental-gt', brand: 'Bentley', model: 'Continental GT', wikiTitle: 'Bentley Continental GT', category: 'Lujo', city: 'Monterrey', year: 2024, price: 6950000, mileage: '3,400 km', engine: '6.0L W12 Biturbo', hp: 650, acc: '3.6 s', trans: 'DCT 8 Vel. AWD', retention: '+6% Último W12', trend: 1.06, desc: 'Continental GT Speed con pantalla giratoria Bentley, sonido Naim y paquete Mulliner.' },
+
+      // VOLKSWAGEN (1)
+      { id: 'vw-golf-gti', brand: 'Volkswagen', model: 'Golf GTI', wikiTitle: 'Volkswagen Golf GTI', category: 'Comercial', city: 'Guadalajara', year: 2024, price: 825000, mileage: '6,100 km', engine: '2.0L TSI Turbo', hp: 241, acc: '5.9 s', trans: 'DSG 7 Vel.', retention: '85% Retención Hot Hatch', trend: 0.85, desc: 'Golf GTI Mk8 con tapicería clásica Scalepaper, sonido Harman Kardon y garantía de planta.' },
+
+      // LEXUS (1)
+      { id: 'lexus-lfa', brand: 'Lexus', model: 'LFA', wikiTitle: 'Lexus LFA', category: 'Colección', city: 'Monterrey', year: 2012, price: 18500000, mileage: '4,200 km', engine: '4.8L V10 1LR-GUE Yamaha', hp: 560, acc: '3.6 s', trans: 'ASG 6 Vel.', retention: '+28% Obra Maestra V10', trend: 1.28, desc: 'Unidad numerada de 500 producidas, chasis CFRP de fibra de carbono y la nota de escape más icónica.' },
+
+      // JEEP (1)
+      { id: 'jeep-wrangler', brand: 'Jeep', model: 'Wrangler', wikiTitle: 'Jeep Wrangler', category: 'Comercial', city: 'Tijuana', year: 2024, price: 2180000, mileage: '4,900 km', engine: '6.4L HEMI V8', hp: 470, acc: '4.5 s', trans: 'Automática 8 Vel. 4x4', retention: '89% Retención Rubicon 392', trend: 0.89, desc: 'Wrangler Rubicon 392 Final Edition con paquete Xtreme 35, winch Warn integrado y techo desmontable.' },
+
+      // RAM (1)
+      { id: 'ram-1500', brand: 'RAM', model: '1500', wikiTitle: 'Ram pickup', category: 'Comercial', city: 'Monterrey', year: 2024, price: 2490000, mileage: '5,800 km', engine: '6.2L HEMI V8 Supercargado', hp: 702, acc: '4.5 s', trans: 'TorqueFlite 8 Vel. 4x4', retention: '89% Retención TRX', trend: 0.89, desc: 'RAM 1500 TRX Final Edition con amortiguadores Bilstein Black Hawk e2 y paquete Level 2.' },
+
+      // TESLA (1)
+      { id: 'tesla-model-s', brand: 'Tesla', model: 'Model S', wikiTitle: 'Tesla Model S', category: 'Lujo', city: 'CDMX', year: 2024, price: 2190000, mileage: '4,400 km', engine: 'Tri-Motor Eléctrico AWD', hp: 1020, acc: '2.1 s', trans: '1 Vel. AWD', retention: '78% Retención EV', trend: 0.78, desc: 'Model S Plaid con Track Package de frenos carbono-cerámicos, interior blanco y piloto automático mejorado.' },
+
+      // CADILLAC (1)
+      { id: 'cadillac-escalade', brand: 'Cadillac', model: 'Escalade', wikiTitle: 'Cadillac Escalade', category: 'Lujo', city: 'Guadalajara', year: 2024, price: 3580000, mileage: '6,300 km', engine: '6.2L V8 Supercargado', hp: 682, acc: '4.4 s', trans: 'Automática 10 Vel. AWD', retention: '86% Retención a 5 años', trend: 0.86, desc: 'Escalade-V con pantalla curva OLED de 38 pulgadas, audio AKG Studio Reference de 36 bocinas y Super Cruise.' },
+
+      // LAND ROVER (1)
+      { id: 'land-rover-range-rover', brand: 'Land Rover', model: 'Range Rover', wikiTitle: 'Range Rover', category: 'Lujo', city: 'CDMX', year: 2025, price: 4650000, mileage: '2,900 km', engine: '4.4L V8 Biturbo Mild-Hybrid', hp: 615, acc: '4.5 s', trans: 'ZF 8 Vel. AWD', retention: '87% Retención a 5 años', trend: 0.87, desc: 'Range Rover SV Autobiography con asientos ejecutivos traseros, acabados cerámicos y audio Meridian Signature.' }
+    ];
+
+    // Enriquecer inventario con proyecciones, folios y URL inicial de respaldo
+    const INVENTORY = RAW_INVENTORY.map((v, idx) => {
+      const cityCode = v.city === 'Tijuana' ? 'TJ' : v.city === 'Monterrey' ? 'MTY' : v.city === 'CDMX' ? 'CDMX' : 'GDL';
+      const certCode = `GHM-${cityCode}-${String(101 + idx)}`;
+      const y0 = v.price;
+      const y4 = Math.round((v.price * v.trend) / 10000) * 10000;
+      const step = (y4 - y0) / 4;
+      const projectionValues = [
+        y0,
+        Math.round((y0 + step) / 10000) * 10000,
+        Math.round((y0 + step * 2) / 10000) * 10000,
+        Math.round((y0 + step * 3) / 10000) * 10000,
+        y4
+      ];
+      return {
+        ...v,
+        name: `${v.brand} ${v.model}`,
+        certCode,
+        legalStatus: 'Factura Original · REPUVE Verificado · Sin Adeudos ni Siniestros',
+        projectionYears: ['2026', '2027', '2028', '2029', '2030'],
+        projectionValues,
+        imageUrl: null // Se resuelve vía CarImageEngine en lote
+      };
+    });
+
+    // Índice plano del directorio universal para autocompletado instantáneo
+    const FLAT_DIRECTORY = [];
+    Object.keys(CAR_DIRECTORY).sort().forEach(brand => {
+      CAR_DIRECTORY[brand].forEach(model => {
+        const invMatch = INVENTORY.find(
+          v => v.brand.toLowerCase() === brand.toLowerCase() && v.model.toLowerCase() === model.toLowerCase()
+        );
+        FLAT_DIRECTORY.push({
+          brand,
+          model,
+          fullName: `${brand} ${model}`,
+          inStock: Boolean(invMatch),
+          inventoryId: invMatch ? invMatch.id : null
+        });
+      });
+    });
+
+    /**
+     * =========================================================================
+     * 5. ESTADO GLOBAL DE LA APLICACIÓN
+     * =========================================================================
+     */
+    const state = {
+      search: '',
+      brand: 'Todas',
+      model: 'Todos',
+      category: 'Todos',
+      city: 'Todas',
+      maxPrice: 0,
+      sort: 'featured',
+      visibleCount: 12,
+      compareIds: [],
+      activeChart: null,
+      activeVehicleId: null,
+      selectedCustomIds: new Set()
+    };
+
+    /**
+     * =========================================================================
+     * 6. UTILIDADES (MONEDA, TOASTS, MODALES, IMÁGENES SEGURAS)
+     * =========================================================================
+     */
+    function formatMXN(amount) {
+      return new Intl.NumberFormat('es-MX', {
+        style: 'currency',
+        currency: 'MXN',
+        maximumFractionDigits: 0
+      }).format(amount) + ' MXN';
+    }
+
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+      const borderMap = {
+        success: 'border-champagne',
+        warning: 'border-amber-500/70',
+        error: 'border-red-500/70',
+        info: 'border-subtle'
+      };
+      const iconMap = {
+        success: 'check-circle-2',
+        warning: 'alert-triangle',
+        error: 'alert-circle',
+        info: 'info'
+      };
+      const toast = document.createElement('div');
+      toast.className = `pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-xl border bg-graphite text-smoke shadow-2xl animate-fade-in ${borderMap[type] || borderMap.info}`;
+      toast.innerHTML = `
+        <i data-lucide="${iconMap[type] || 'info'}" class="w-4 h-4 text-champagne shrink-0"></i>
+        <span class="text-xs sm:text-sm font-medium leading-snug">${message}</span>
+      `;
+      container.appendChild(toast);
+      lucide.createIcons();
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(-8px)';
+        toast.style.transition = 'all 0.25s ease';
+        setTimeout(() => toast.remove(), 260);
+      }, 3600);
+    }
+
+    function openModal(modalId) {
+      const el = document.getElementById(modalId);
+      if (!el) return;
+      el.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+      lucide.createIcons();
+    }
+
+    function closeModal(modalId) {
+      const el = document.getElementById(modalId);
+      if (!el) return;
+      el.classList.add('hidden');
+      const anyOpen = ['vehicle-modal', 'sell-modal', 'legal-modal'].some(
+        id => !document.getElementById(id).classList.contains('hidden')
+      );
+      if (!anyOpen) document.body.style.overflow = '';
+
+      if (modalId === 'vehicle-modal' && state.activeChart) {
+        try {
+          state.activeChart.destroy();
+          state.activeChart = null;
+        } catch (err) {
+          console.error('Error al destruir gráfica:', err);
+        }
+      }
+    }
+
+    function toggleMobileMenu(forceState) {
+      const menu = document.getElementById('mobile-menu');
+      if (!menu) return;
+      if (typeof forceState === 'boolean') {
+        menu.classList.toggle('hidden', !forceState);
+      } else {
+        menu.classList.toggle('hidden');
+      }
+    }
+
+    // Manejador seguro de carga/error de imagen: quita skeleton y aplica respaldo SVG si falla
+    function handleImageLoaded(imgEl) {
+      const wrapper = imgEl.parentElement;
+      if (wrapper) {
+        const skel = wrapper.querySelector('.img-skeleton');
+        if (skel) skel.classList.add('hidden');
+      }
+    }
+
+    function handleImageError(imgEl, brand, model, year) {
+      if (imgEl.dataset.fallbackApplied === '1') return;
+      imgEl.dataset.fallbackApplied = '1';
+      imgEl.src = CarImageEngine.buildFallbackSVG(brand, model, year);
+      handleImageLoaded(imgEl);
+    }
+
+    // Actualiza en vivo las imágenes de tarjetas ya renderizadas cuando termina el batch
+    function updateRenderedCardImages() {
+      INVENTORY.forEach(v => {
+        if (v.imageUrl) updateSingleCardImage(v.id, v.imageUrl);
+      });
+    }
+
+    function updateSingleCardImage(vehicleId, url) {
+      const img = document.getElementById(`card-img-${vehicleId}`);
+      if (!img || !url) return;
+      if (img.src !== url) {
+        img.dataset.fallbackApplied = '0';
+        img.src = url;
+      }
+      if (img.complete && img.naturalWidth > 0) {
+        handleImageLoaded(img);
+      }
+    }
+
+    /**
+     * =========================================================================
+     * 7. SELECTORES EN CASCADA (MARCA -> MODELO) Y AUTOCOMPLETADO UNIVERSAL
+     * =========================================================================
+     */
+    function populateBrandSelects() {
+      const sortedBrands = Object.keys(CAR_DIRECTORY).sort();
+      ['hero-brand-select', 'filter-brand', 'sell-brand'].forEach(id => {
+        const sel = document.getElementById(id);
+        if (!sel) return;
+        sortedBrands.forEach(brand => {
+          const opt = document.createElement('option');
+          opt.value = brand;
+          opt.textContent = brand;
+          sel.appendChild(opt);
+        });
+      });
+
+      // Poblar datalist del formulario de citas
+      const datalist = document.getElementById('appt-vehicle-datalist');
+      if (datalist) {
+        INVENTORY.forEach(v => {
+          const opt = document.createElement('option');
+          opt.value = `${v.name} (${v.year} · ${v.city})`;
+          datalist.appendChild(opt);
+        });
+      }
+
+      // Estadísticas Hero
+      document.getElementById('stat-brands-count').textContent = `${sortedBrands.length}+`;
+      document.getElementById('stat-models-count').textContent = `${FLAT_DIRECTORY.length}+`;
+      document.getElementById('stat-inventory-count').textContent = `${INVENTORY.length}`;
+    }
+
+    function populateModelSelect(brand, modelSelectId, defaultLabel = 'Todos los modelos') {
+      const sel = document.getElementById(modelSelectId);
+      if (!sel) return;
+      sel.innerHTML = '';
+
+      if (!brand || brand === 'Todas') {
+        sel.disabled = true;
+        const opt = document.createElement('option');
+        opt.value = modelSelectId === 'sell-model' ? '' : 'Todos';
+        opt.textContent = modelSelectId === 'sell-model' ? 'Selecciona marca primero' : defaultLabel;
+        sel.appendChild(opt);
+        return;
+      }
+
+      sel.disabled = false;
+      const firstOpt = document.createElement('option');
+      firstOpt.value = modelSelectId === 'sell-model' ? '' : 'Todos';
+      firstOpt.textContent = defaultLabel;
+      sel.appendChild(firstOpt);
+
+      const models = CAR_DIRECTORY[brand] || [];
+      models.forEach(m => {
+        const opt = document.createElement('option');
+        opt.value = m;
+        opt.textContent = m;
+        sel.appendChild(opt);
+      });
+    }
+
+    function renderBrandPills() {
+      const bar = document.getElementById('brand-pills-bar');
+      if (!bar) return;
+
+      // Priorizar marcas con inventario primero, luego el resto del directorio
+      const invBrands = [...new Set(INVENTORY.map(v => v.brand))].sort();
+      const otherBrands = Object.keys(CAR_DIRECTORY).filter(b => !invBrands.includes(b)).sort();
+      const ordered = ['Todas', ...invBrands, ...otherBrands];
+
+      bar.innerHTML = ordered.map(brand => {
+        const active = state.brand === brand;
+        const hasInv = brand === 'Todas' || invBrands.includes(brand);
+        return `
+          <button
+            type="button"
+            onclick="selectBrandPill('${brand.replace(/'/g, "\\'")}')"
+            class="shrink-0 px-3.5 py-2 rounded-xl text-xs font-medium border transition-colors ${
+              active
+                ? 'bg-champagne text-obsidian border-champagne font-semibold'
+                : 'bg-graphite text-smoke/90 border-subtle hover:border-champagne/60 hover:text-champagne'
+            }"
+          >
+            ${brand}${!hasInv ? ' · Pedido' : ''}
+          </button>
+        `;
+      }).join('');
+    }
+
+    function selectBrandPill(brand) {
+      state.brand = brand;
+      state.model = 'Todos';
+      state.search = '';
+      state.visibleCount = 12;
+
+      document.getElementById('filter-brand').value = brand;
+      document.getElementById('filter-search').value = '';
+      populateModelSelect(brand, 'filter-model', 'Todos');
+
+      renderBrandPills();
+      renderCatalog();
+    }
+
+    function setupAutocomplete(inputId, dropdownId, onSelect) {
+      const input = document.getElementById(inputId);
+      const dropdown = document.getElementById(dropdownId);
+      if (!input || !dropdown) return;
+
+      input.addEventListener('input', () => {
+        const q = input.value.trim().toLowerCase();
+        if (q.length < 2) {
+          dropdown.classList.add('hidden');
+          dropdown.innerHTML = '';
+          return;
+        }
+
+        const matches = FLAT_DIRECTORY.filter(item =>
+          item.fullName.toLowerCase().includes(q) ||
+          item.brand.toLowerCase().includes(q) ||
+          item.model.toLowerCase().includes(q)
+        ).slice(0, 10);
+
+        if (matches.length === 0) {
+          dropdown.innerHTML = `
+            <div class="p-3.5 text-xs text-metallic flex items-center justify-between gap-2">
+              <span>No encontrado en directorio. Podemos localizar "${input.value.trim()}" bajo pedido.</span>
+              <button type="button" class="px-2.5 py-1 rounded-lg bg-champagne text-obsidian font-semibold shrink-0" onclick="requestSpecialOrder('${input.value.trim().replace(/'/g, "\\'")}')">Solicitar</button>
+            </div>
+          `;
+          dropdown.classList.remove('hidden');
+          return;
+        }
+
+        dropdown.innerHTML = matches.map(m => `
+          <button
+            type="button"
+            class="w-full px-4 py-2.5 text-left hover:bg-charcoal transition-colors flex items-center justify-between gap-3"
+            data-brand="${m.brand}"
+            data-model="${m.model}"
+          >
+            <div>
+              <span class="text-sm font-medium text-smoke">${m.brand} <strong class="text-champagne">${m.model}</strong></span>
+            </div>
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider shrink-0 ${
+              m.inStock
+                ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
+                : 'bg-champagne/15 text-champagne border border-champagne/30'
+            }">
+              ${m.inStock ? 'En Inventario Verificado' : 'Bajo Pedido (White Glove)'}
+            </span>
+          </button>
+        `).join('');
+
+        dropdown.querySelectorAll('button[data-brand]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const b = btn.dataset.brand;
+            const mod = btn.dataset.model;
+            dropdown.classList.add('hidden');
+            onSelect(b, mod);
+          });
+        });
+
+        dropdown.classList.remove('hidden');
+      });
+
+      document.addEventListener('click', e => {
+        if (!input.contains(e.target) && !dropdown.contains(e.target)) {
+          dropdown.classList.add('hidden');
+        }
+      });
+    }
+
+    /**
+     * =========================================================================
+     * 8. RENDERIZADO DEL CATÁLOGO Y PANEL BAJO PEDIDO (WHITE GLOVE)
+     * =========================================================================
+     */
+    function getFilteredVehicles() {
+      const q = state.search.trim().toLowerCase();
+      let list = INVENTORY.filter(v => {
+        const matchesText =
+          !q ||
+          v.name.toLowerCase().includes(q) ||
+          v.brand.toLowerCase().includes(q) ||
+          v.model.toLowerCase().includes(q) ||
+          v.engine.toLowerCase().includes(q) ||
+          v.city.toLowerCase().includes(q) ||
+          v.category.toLowerCase().includes(q);
+        const matchesBrand = state.brand === 'Todas' || v.brand === state.brand;
+        const matchesModel = state.model === 'Todos' || v.model.toLowerCase().includes(state.model.toLowerCase());
+        const matchesCat = state.category === 'Todos' || v.category === state.category;
+        const matchesCity = state.city === 'Todas' || v.city === state.city;
+        const matchesPrice = !state.maxPrice || v.price <= state.maxPrice;
+        return matchesText && matchesBrand && matchesModel && matchesCat && matchesCity && matchesPrice;
+      });
+
+      if (state.sort === 'price-asc') list.sort((a, b) => a.price - b.price);
+      else if (state.sort === 'price-desc') list.sort((a, b) => b.price - a.price);
+      else if (state.sort === 'year-desc') list.sort((a, b) => b.year - a.year);
+      else if (state.sort === 'hp-desc') list.sort((a, b) => b.hp - a.hp);
+
+      return list;
+    }
+
+    async function showSpecialOrderPanel(brand, model) {
+      const panel = document.getElementById('special-order-panel');
+      const titleEl = document.getElementById('special-order-title');
+      const descEl = document.getElementById('special-order-desc');
+      const imgEl = document.getElementById('special-order-img');
+      const skelEl = document.getElementById('special-order-skeleton');
+      const ctaBtn = document.getElementById('special-order-cta');
+      if (!panel || !titleEl || !imgEl) return;
+
+      const fullLabel = model && model !== 'Todos' ? `${brand} ${model}` : brand;
+      titleEl.textContent = fullLabel;
+      descEl.textContent = `Actualmente no contamos con un ${fullLabel} en stock inmediato en sala, pero nuestro equipo White Glove puede localizarlo, certificarlo mecánica y legalmente, importarlo y personalizarlo a tu medida en México.`;
+
+      panel.classList.remove('hidden');
+      if (skelEl) skelEl.classList.remove('hidden');
+      imgEl.dataset.fallbackApplied = '0';
+
+      ctaBtn.onclick = () => requestSpecialOrder(fullLabel);
+      lucide.createIcons();
+
+      const photoUrl = await CarImageEngine.getSingleCarImage(brand, model === 'Todos' ? '' : model, 'BAJO PEDIDO');
+      imgEl.onload = () => { if (skelEl) skelEl.classList.add('hidden'); };
+      imgEl.onerror = () => handleImageError(imgEl, brand, model === 'Todos' ? '' : model, 'BAJO PEDIDO');
+      imgEl.src = photoUrl;
+      if (imgEl.complete && imgEl.naturalWidth > 0 && skelEl) {
+        skelEl.classList.add('hidden');
+      }
+    }
+
+    function hideSpecialOrderPanel() {
+      const panel = document.getElementById('special-order-panel');
+      if (panel) panel.classList.add('hidden');
+    }
+
+    function requestSpecialOrder(vehicleLabel) {
+      resetAppointmentForm(true);
+      document.getElementById('appt-vehicle').value = `${vehicleLabel} (Bajo Pedido White Glove)`;
+      document.getElementById('appt-interest').value = 'Búsqueda Bajo Pedido / White Glove';
+      document.getElementById('citas').scrollIntoView({ behavior: 'smooth' });
+      showToast(`Solicitud White Glove prellenada para: ${vehicleLabel}`, 'success');
+    }
+
+    function renderCatalog() {
+      const grid = document.getElementById('catalog-grid');
+      const empty = document.getElementById('catalog-empty');
+      const count = document.getElementById('catalog-count');
+      const loadMoreWrap = document.getElementById('load-more-wrapper');
+      if (!grid || !empty || !count) return;
+
+      const list = getFilteredVehicles();
+      count.textContent = `${list.length} ${list.length === 1 ? 'unidad verificada' : 'unidades verificadas'}`;
+
+      if (list.length === 0) {
+        grid.innerHTML = '';
+        if (loadMoreWrap) loadMoreWrap.classList.add('hidden');
+
+        // Si el usuario eligió una marca/modelo o texto específico, mostrar panel inteligente Bajo Pedido
+        if (state.brand !== 'Todas') {
+          empty.classList.add('hidden');
+          showSpecialOrderPanel(state.brand, state.model);
+        } else if (state.search.trim().length >= 2) {
+          empty.classList.add('hidden');
+          showSpecialOrderPanel(state.search.trim(), '');
+        } else {
+          hideSpecialOrderPanel();
+          empty.classList.remove('hidden');
+        }
+        lucide.createIcons();
+        return;
+      }
+
+      hideSpecialOrderPanel();
+      empty.classList.add('hidden');
+
+      const sliced = list.slice(0, state.visibleCount);
+      if (loadMoreWrap) {
+        loadMoreWrap.classList.toggle('hidden', list.length <= state.visibleCount);
+        const remaining = list.length - state.visibleCount;
+        const btn = document.getElementById('load-more-btn');
+        if (btn && remaining > 0) {
+          btn.querySelector('span').textContent = `Mostrar más vehículos (${remaining} restantes)`;
+        }
+      }
+
+      grid.innerHTML = sliced.map(v => {
+        const isCompared = state.compareIds.includes(v.id);
+        const initialSrc = v.imageUrl || CarImageEngine.buildFallbackSVG(v.brand, v.model, v.year);
+        const isLoaded = Boolean(v.imageUrl);
+        return `
+          <article class="group rounded-2xl bg-graphite border border-subtle hover:border-champagne/60 transition-all duration-300 overflow-hidden flex flex-col justify-between shadow-lg shadow-black/40">
+            <div>
+              <div class="relative aspect-[16/11] overflow-hidden bg-obsidian">
+                <div class="img-skeleton absolute inset-0 ${isLoaded ? 'hidden' : ''}"></div>
+                <img
+                  id="card-img-${v.id}"
+                  src="${initialSrc}"
+                  alt="${v.name} ${v.year}"
+                  referrerpolicy="no-referrer"
+                  loading="lazy"
+                  onload="handleImageLoaded(this)"
+                  onerror="handleImageError(this, '${v.brand.replace(/'/g, "\\'")}', '${v.model.replace(/'/g, "\\'")}', '${v.year}')"
+                  class="relative z-10 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <div class="absolute inset-0 z-10 pointer-events-none bg-gradient-to-t from-graphite/90 via-transparent to-transparent"></div>
+                <span class="absolute top-3 left-3 z-20 px-2.5 py-1 rounded-lg bg-obsidian/85 backdrop-blur border border-subtle text-[10px] font-semibold uppercase tracking-wider text-smoke">
+                  ${v.category}
+                </span>
+                <span class="absolute bottom-3 left-3 z-20 inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-champagne/95 text-obsidian text-[10px] font-bold uppercase tracking-wider">
+                  <i data-lucide="shield-check" class="w-3 h-3"></i>
+                  <span>Certificado</span>
+                </span>
+              </div>
+
+              <div class="p-5">
+                <div class="flex items-center justify-between text-xs text-metallic mb-1.5">
+                  <span class="inline-flex items-center gap-1"><i data-lucide="map-pin" class="w-3.5 h-3.5 text-champagne"></i>${v.city}</span>
+                  <span>${v.year}</span>
+                </div>
+                <h3 class="font-serif text-lg font-bold text-smoke leading-snug mb-3 group-hover:text-champagne transition-colors">
+                  ${v.name}
+                </h3>
+                <div class="grid grid-cols-2 gap-2 py-2.5 border-y border-subtle/80 text-xs text-metallic mb-4">
+                  <div class="flex items-center gap-1.5">
+                    <i data-lucide="gauge" class="w-3.5 h-3.5 text-champagne"></i>
+                    <span>${v.hp} HP</span>
+                  </div>
+                  <div class="flex items-center gap-1.5">
+                    <i data-lucide="route" class="w-3.5 h-3.5 text-champagne"></i>
+                    <span>${v.mileage}</span>
+                  </div>
+                </div>
+                <p class="text-lg font-bold text-smoke mb-1">${formatMXN(v.price)}</p>
+              </div>
+            </div>
+
+            <div class="px-5 pb-5 grid grid-cols-12 gap-2">
+              <button type="button" onclick="openVehicleModal('${v.id}')" class="col-span-8 py-2.5 px-3 rounded-xl bg-smoke text-obsidian font-semibold text-xs hover:bg-champagne transition-colors">
+                Ver Ficha Técnica
+              </button>
+              <button
+                type="button"
+                onclick="toggleCompare('${v.id}')"
+                class="col-span-4 py-2.5 px-2 rounded-xl border text-xs font-semibold transition-colors flex items-center justify-center gap-1 ${
+                  isCompared
+                    ? 'bg-champagne/20 border-champagne text-champagne'
+                    : 'bg-obsidian border-subtle text-metallic hover:text-smoke hover:border-champagne'
+                }"
+                title="${isCompared ? 'Quitar del comparador' : 'Añadir al comparador'}"
+              >
+                <i data-lucide="${isCompared ? 'check' : 'git-compare-arrows'}" class="w-3.5 h-3.5"></i>
+                <span class="hidden sm:inline">${isCompared ? 'Listo' : 'Comp.'}</span>
+              </button>
+            </div>
+          </article>
+        `;
+      }).join('');
+
+      lucide.createIcons();
+    }
+
+    function resetFilters() {
+      state.search = '';
+      state.brand = 'Todas';
+      state.model = 'Todos';
+      state.category = 'Todos';
+      state.city = 'Todas';
+      state.maxPrice = 0;
+      state.sort = 'featured';
+      state.visibleCount = 12;
+
+      document.getElementById('filter-search').value = '';
+      document.getElementById('filter-brand').value = 'Todas';
+      populateModelSelect('Todas', 'filter-model', 'Todos');
+      document.getElementById('filter-category').value = 'Todos';
+      document.getElementById('filter-city').value = 'Todas';
+      document.getElementById('filter-max-price').value = '0';
+      document.getElementById('filter-sort').value = 'featured';
+
+      renderBrandPills();
+      renderCatalog();
+      showToast('Filtros restablecidos.', 'info');
+    }
+
+    /**
+     * =========================================================================
+     * 9. MODAL DE FICHA TÉCNICA + GALERÍA COMMONS + CONFIGURADOR + CHART.JS
+     * =========================================================================
+     */
+    async function openVehicleModal(vehicleId) {
+      const v = INVENTORY.find(item => item.id === vehicleId);
+      if (!v) return;
+
+      state.activeVehicleId = v.id;
+      state.selectedCustomIds.clear();
+
+      document.getElementById('modal-vehicle-category').textContent = `${v.category} · ${v.city} · ${v.year}`;
+      document.getElementById('modal-vehicle-title').textContent = v.name;
+      document.getElementById('modal-vehicle-desc').textContent = v.desc;
+      document.getElementById('modal-retention-badge').textContent = v.retention;
+
+      // Imagen principal inmediata
+      const mainImg = document.getElementById('modal-main-image');
+      const primarySrc = v.imageUrl || CarImageEngine.buildFallbackSVG(v.brand, v.model, v.year);
+      mainImg.dataset.fallbackApplied = '0';
+      mainImg.src = primarySrc;
+      mainImg.onerror = () => handleImageError(mainImg, v.brand, v.model, v.year);
+
+      // Placeholder inicial de miniaturas mientras cargan las reales de Commons
+      const thumbsContainer = document.getElementById('modal-thumbnails');
+      thumbsContainer.innerHTML = `
+        <button type="button" onclick="changeModalImage('${primarySrc}', this)" class="thumb-btn aspect-[16/10] rounded-lg overflow-hidden border-2 border-champagne">
+          <img src="${primarySrc}" alt="Vista 1" referrerpolicy="no-referrer" class="w-full h-full object-cover" />
+        </button>
+        <div class="aspect-[16/10] rounded-lg img-skeleton border border-subtle"></div>
+        <div class="aspect-[16/10] rounded-lg img-skeleton border border-subtle"></div>
+        <div class="aspect-[16/10] rounded-lg img-skeleton border border-subtle"></div>
+      `;
+
+      // Especificaciones técnicas
+      const specs = [
+        { label: 'Motor', value: v.engine },
+        { label: 'Potencia', value: `${v.hp} HP` },
+        { label: 'Transmisión', value: v.trans },
+        { label: '0 - 100 km/h', value: v.acc },
+        { label: 'Kilometraje', value: v.mileage },
+        { label: 'Ubicación', value: v.city }
+      ];
+      document.getElementById('modal-specs-grid').innerHTML = specs.map(s => `
+        <div class="p-3 rounded-xl bg-obsidian border border-subtle">
+          <span class="block text-[10px] uppercase tracking-wider text-metallic">${s.label}</span>
+          <span class="block text-xs sm:text-sm font-semibold text-smoke mt-0.5">${s.value}</span>
+        </div>
+      `).join('');
+
+      // Configurador de Personalización
+      renderModalCustomizations(v);
+      updateModalPricing(v);
+
+      // Dictamen Legal
+      document.getElementById('modal-legal-list').innerHTML = `
+        <li class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-champagne mt-0.5 shrink-0"></i><span><strong class="text-smoke">Folio de Peritaje:</strong> ${v.certCode}</span></li>
+        <li class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-champagne mt-0.5 shrink-0"></i><span><strong class="text-smoke">Estatus Legal:</strong> ${v.legalStatus}</span></li>
+        <li class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-champagne mt-0.5 shrink-0"></i><span><strong class="text-smoke">Inspección Multipunto:</strong> 150 puntos mecánicos, estructurales y electrónicos aprobados.</span></li>
+        <li class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-champagne mt-0.5 shrink-0"></i><span><strong class="text-smoke">Respaldo:</strong> Intermediación segura Greyhound Motorsports, S.A. de C.V.</span></li>
+      `;
+
+      document.getElementById('modal-schedule-btn').onclick = () => scheduleForVehicle(v.id);
+      document.getElementById('modal-download-btn').onclick = () => downloadCertificationReport(v.id);
+
+      openModal('vehicle-modal');
+      renderDepreciationChart(v);
+
+      // Cargar en segundo plano hasta 3 fotos reales adicionales en Wikimedia Commons
+      try {
+        const galleryUrls = await CarImageEngine.getVehicleGallery(v);
+        if (state.activeVehicleId !== v.id) return; // Evitar sobrescribir si el usuario cambió de auto
+        thumbsContainer.innerHTML = galleryUrls.map((url, idx) => `
+          <button
+            type="button"
+            onclick="changeModalImage('${url.replace(/'/g, "\\'")}', this)"
+            class="thumb-btn aspect-[16/10] rounded-lg overflow-hidden border-2 transition-all ${idx === 0 ? 'border-champagne' : 'border-subtle opacity-75 hover:opacity-100'}"
+          >
+            <img src="${url}" alt="${v.name} foto ${idx + 1}" referrerpolicy="no-referrer" onerror="handleImageError(this, '${v.brand.replace(/'/g, "\\'")}', '${v.model.replace(/'/g, "\\'")}', '${v.year}')" class="w-full h-full object-cover" />
+          </button>
+        `).join('');
+      } catch (err) {
+        console.warn('Error cargando galería adicional:', err);
+      }
+    }
+
+    function changeModalImage(url, btnElement) {
+      const mainImg = document.getElementById('modal-main-image');
+      if (mainImg) {
+        mainImg.dataset.fallbackApplied = '0';
+        mainImg.src = url;
+      }
+      document.querySelectorAll('#modal-thumbnails .thumb-btn').forEach(btn => {
+        btn.classList.remove('border-champagne');
+        btn.classList.add('border-subtle', 'opacity-75');
+      });
+      if (btnElement) {
+        btnElement.classList.add('border-champagne');
+        btnElement.classList.remove('border-subtle', 'opacity-75');
+      }
+    }
+
+    function renderModalCustomizations(vehicle) {
+      const container = document.getElementById('modal-customization-list');
+      if (!container) return;
+      container.innerHTML = CUSTOMIZATION_PACKAGES.map(pkg => `
+        <label class="flex items-start gap-3 p-3.5 rounded-xl bg-graphite border border-subtle hover:border-champagne/50 cursor-pointer transition-colors">
+          <input
+            type="checkbox"
+            value="${pkg.id}"
+            onchange="toggleCustomization('${pkg.id}')"
+            class="mt-1 w-4 h-4 accent-[#C9A84C] rounded cursor-pointer shrink-0"
+          />
+          <div class="leading-snug">
+            <span class="block text-xs font-semibold text-smoke">${pkg.name}</span>
+            <span class="block text-[11px] text-metallic mt-0.5">${pkg.desc}</span>
+            <span class="block text-xs font-bold text-champagne mt-1.5">+${formatMXN(pkg.price)}</span>
+          </div>
+        </label>
+      `).join('');
+    }
+
+    function toggleCustomization(pkgId) {
+      if (state.selectedCustomIds.has(pkgId)) {
+        state.selectedCustomIds.delete(pkgId);
+      } else {
+        state.selectedCustomIds.add(pkgId);
+      }
+      const v = INVENTORY.find(item => item.id === state.activeVehicleId);
+      if (v) updateModalPricing(v);
+    }
+
+    function getSelectedCustomizations() {
+      return CUSTOMIZATION_PACKAGES.filter(p => state.selectedCustomIds.has(p.id));
+    }
+
+    function updateModalPricing(vehicle) {
+      const selected = getSelectedCustomizations();
+      const customTotal = selected.reduce((sum, p) => sum + p.price, 0);
+      const grandTotal = vehicle.price + customTotal;
+
+      document.getElementById('modal-base-price').textContent = formatMXN(vehicle.price);
+      document.getElementById('modal-custom-price').textContent = `+${formatMXN(customTotal)}`;
+      document.getElementById('modal-total-price').textContent = formatMXN(grandTotal);
+    }
+
+    function renderDepreciationChart(vehicle) {
+      try {
+        const canvas = document.getElementById('depreciation-chart');
+        if (!canvas || typeof Chart === 'undefined') return;
+        if (state.activeChart) {
+          state.activeChart.destroy();
+          state.activeChart = null;
+        }
+
+        const ctx = canvas.getContext('2d');
+        const gradient = ctx.createLinearGradient(0, 0, 0, 220);
+        gradient.addColorStop(0, 'rgba(201, 168, 76, 0.35)');
+        gradient.addColorStop(1, 'rgba(201, 168, 76, 0.02)');
+
+        state.activeChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: vehicle.projectionYears,
+            datasets: [{
+              label: 'Valor Estimado (MXN)',
+              data: vehicle.projectionValues,
+              borderColor: '#C9A84C',
+              backgroundColor: gradient,
+              borderWidth: 2.5,
+              pointBackgroundColor: '#F5F5F5',
+              pointBorderColor: '#C9A84C',
+              pointRadius: 4,
+              pointHoverRadius: 6,
+              fill: true,
+              tension: 0.35
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                backgroundColor: '#141414',
+                borderColor: '#C9A84C',
+                borderWidth: 1,
+                titleColor: '#C9A84C',
+                bodyColor: '#F5F5F5',
+                callbacks: { label: ctx => formatMXN(ctx.parsed.y) }
+              }
+            },
+            scales: {
+              x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#A3A3A3', font: { size: 11 } } },
+              y: {
+                grid: { color: 'rgba(255,255,255,0.05)' },
+                ticks: {
+                  color: '#A3A3A3',
+                  font: { size: 11 },
+                  callback: val => val >= 1000000 ? '$' + (val / 1000000).toFixed(1) + 'M' : '$' + (val / 1000).toFixed(0) + 'k'
+                }
+              }
+            }
+          }
+        });
+      } catch (err) {
+        console.error('Error renderizando gráfica:', err);
+      }
+    }
+
+    function downloadCertificationReport(vehicleId) {
+      const v = INVENTORY.find(item => item.id === vehicleId);
+      if (!v) return;
+
+      try {
+        const selectedPkgs = getSelectedCustomizations();
+        const customTotal = selectedPkgs.reduce((s, p) => s + p.price, 0);
+        const grandTotal = v.price + customTotal;
+        const imgSrc = v.imageUrl || CarImageEngine.buildFallbackSVG(v.brand, v.model, v.year);
+        const customRows = selectedPkgs.length
+          ? selectedPkgs.map(p => `<li><strong>${p.name}:</strong> +${formatMXN(p.price)} (${p.desc})</li>`).join('')
+          : '<li>Sin paquetes adicionales seleccionados (especificación original).</li>';
+
+        const htmlReport = `<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Reporte Certificado - ${v.name}</title>
+  <style>
+    body { font-family: Arial, sans-serif; color: #141414; margin: 36px; line-height: 1.6; }
+    .header { border-bottom: 3px solid #C9A84C; padding-bottom: 14px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+    .brand { font-size: 20px; font-weight: bold; letter-spacing: 2px; }
+    .badge { background: #C9A84C; color: #0A0A0A; padding: 6px 12px; font-weight: bold; font-size: 12px; border-radius: 4px; }
+    .car-img { width: 100%; max-height: 320px; object-fit: cover; border-radius: 8px; margin-bottom: 20px; border: 1px solid #ddd; }
+    table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+    th, td { border: 1px solid #ddd; padding: 10px; text-align: left; font-size: 14px; }
+    th { background: #f5f5f5; width: 35%; }
+    .total { font-size: 16px; font-weight: bold; color: #0A0A0A; background: #faf3df; }
+    .footer { margin-top: 32px; font-size: 12px; color: #666; border-top: 1px solid #ddd; padding-top: 12px; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div>
+      <div class="brand">GREYHOUND MOTORSPORTS, S.A. DE C.V.</div>
+      <div style="font-size:12px;color:#555;">Reporte de Certificación Mecánica, Legal y Configuración White Glove</div>
+    </div>
+    <div class="badge">APROBADO · ${v.certCode}</div>
+  </div>
+  <h2>${v.name} (${v.year})</h2>
+  <img class="car-img" src="${imgSrc}" referrerpolicy="no-referrer" alt="${v.name}" />
+  <p>${v.desc}</p>
+  <table>
+    <tr><th>Categoría / Ubicación</th><td>${v.category} — ${v.city}, México</td></tr>
+    <tr><th>Motor y Potencia</th><td>${v.engine} (${v.hp} HP)</td></tr>
+    <tr><th>Transmisión</th><td>${v.trans}</td></tr>
+    <tr><th>Aceleración 0-100 km/h</th><td>${v.acc}</td></tr>
+    <tr><th>Kilometraje Auditado</th><td>${v.mileage}</td></tr>
+    <tr><th>Estatus Legal</th><td>${v.legalStatus}</td></tr>
+    <tr><th>Proyección de Valor (5 Años)</th><td>${v.retention}</td></tr>
+    <tr><th>Precio Base Certificado</th><td>${formatMXN(v.price)}</td></tr>
+    <tr><th>Personalización White Glove</th><td>+${formatMXN(customTotal)}</td></tr>
+    <tr class="total"><th>Total Estimado</th><td>${formatMXN(grandTotal)}</td></tr>
+  </table>
+  <h3>Paquetes de Personalización Seleccionados</h3>
+  <ul>${customRows}</ul>
+  <div class="footer">
+    Greyhound Motorsports, S.A. de C.V. · Av. Revolución No. 1450, Local 3, Col. Zona Centro, C.P. 22000, Tijuana, Baja California, México.
+  </div>
+</body>
+</html>`;
+
+        const blob = new Blob([htmlReport], { type: 'text/html;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `Certificacion_${v.certCode}_${v.id}.html`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        showToast(`Reporte certificado (${v.certCode}) descargado.`, 'success');
+      } catch (err) {
+        console.error('Error al descargar reporte:', err);
+        showToast('No se pudo generar el reporte.', 'error');
+      }
+    }
+
+    function scheduleForVehicle(vehicleId) {
+      const v = INVENTORY.find(item => item.id === vehicleId);
+      if (!v) return;
+      const selectedPkgs = getSelectedCustomizations();
+
+      closeModal('vehicle-modal');
+      resetAppointmentForm(true);
+
+      document.getElementById('appt-vehicle').value = `${v.name} (${v.year} · ${v.city})`;
+      document.getElementById('appt-city').value = v.city;
+      document.getElementById('appt-interest').value = selectedPkgs.length > 0
+        ? 'Personalización White Glove'
+        : 'Compra de Vehículo Certificado';
+
+      if (selectedPkgs.length > 0) {
+        const names = selectedPkgs.map(p => p.name).join(', ');
+        document.getElementById('appt-comments').value = `Paquetes White Glove preseleccionados: ${names}.`;
+      }
+
+      document.getElementById('citas').scrollIntoView({ behavior: 'smooth' });
+      showToast(`Cita prellenada para ${v.name}.`, 'info');
+    }
+
+    /**
+     * =========================================================================
+     * 10. COMPARADOR TÉCNICO INTERACTIVO (HASTA 3 VEHÍCULOS)
+     * =========================================================================
+     */
+    function toggleCompare(vehicleId) {
+      const idx = state.compareIds.indexOf(vehicleId);
+      const v = INVENTORY.find(item => item.id === vehicleId);
+      if (!v) return;
+
+      if (idx > -1) {
+        state.compareIds.splice(idx, 1);
+        showToast(`${v.name} eliminado del comparador.`, 'info');
+      } else {
+        if (state.compareIds.length >= 3) {
+          showToast('Máximo 3 vehículos simultáneamente en el comparador.', 'warning');
+          return;
+        }
+        state.compareIds.push(vehicleId);
+        showToast(`${v.name} añadido al comparador.`, 'success');
+      }
+
+      renderCatalog();
+      renderComparison();
+    }
+
+    function clearComparison() {
+      state.compareIds = [];
+      renderCatalog();
+      renderComparison();
+      showToast('Comparador técnico limpiado.', 'info');
+    }
+
+    function renderComparison() {
+      const container = document.getElementById('compare-container');
+      const floatingBar = document.getElementById('compare-floating-bar');
+      const floatingCount = document.getElementById('floating-compare-count');
+      const floatingItems = document.getElementById('floating-compare-items');
+      const navBadge = document.getElementById('nav-compare-badge');
+      const mobileBadge = document.getElementById('mobile-compare-badge');
+      const clearSectionBtn = document.getElementById('clear-compare-section-btn');
+
+      const count = state.compareIds.length;
+      const selected = state.compareIds.map(id => INVENTORY.find(v => v.id === id)).filter(Boolean);
+
+      [navBadge, mobileBadge].forEach(b => {
+        if (!b) return;
+        b.textContent = count;
+        b.classList.toggle('hidden', count === 0);
+      });
+
+      if (clearSectionBtn) clearSectionBtn.classList.toggle('hidden', count === 0);
+
+      if (floatingBar && floatingCount && floatingItems) {
+        floatingBar.classList.toggle('hidden', count === 0);
+        floatingCount.textContent = count;
+        floatingItems.innerHTML = selected.map(v => `
+          <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-obsidian border border-subtle text-xs text-smoke shrink-0">
+            <span class="truncate max-w-[120px]">${v.name}</span>
+            <button type="button" onclick="toggleCompare('${v.id}')" class="text-metallic hover:text-champagne" aria-label="Quitar ${v.name}">
+              <i data-lucide="x" class="w-3 h-3"></i>
+            </button>
+          </div>
+        `).join('');
+      }
+
+      if (!container) return;
+      if (count === 0) {
+        container.innerHTML = `
+          <div class="text-center py-14 px-6 rounded-2xl bg-graphite border border-dashed border-subtle">
+            <div class="w-14 h-14 rounded-2xl bg-obsidian border border-subtle text-champagne flex items-center justify-center mx-auto mb-4">
+              <i data-lucide="git-compare-arrows" class="w-6 h-6"></i>
+            </div>
+            <h3 class="font-serif text-xl font-semibold text-smoke mb-2">Aún no has seleccionado vehículos para comparar</h3>
+            <p class="text-sm text-metallic max-w-md mx-auto mb-6">
+              Presiona el botón "Comp." en cualquier tarjeta del catálogo para analizar hasta 3 unidades lado a lado.
+            </p>
+            <a href="#catalogo" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-champagne text-obsidian font-semibold text-sm hover:bg-champagne-light transition-colors">
+              <span>Ir al Catálogo</span>
+              <i data-lucide="arrow-up" class="w-4 h-4"></i>
+            </a>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      const rows = [
+        { label: 'Precio (MXN)', render: v => `<span class="font-bold text-champagne">${formatMXN(v.price)}</span>` },
+        { label: 'Categoría', render: v => v.category },
+        { label: 'Ciudad', render: v => v.city },
+        { label: 'Año', render: v => v.year },
+        { label: 'Kilometraje', render: v => v.mileage },
+        { label: 'Motor', render: v => v.engine },
+        { label: 'Potencia', render: v => `<strong>${v.hp} HP</strong>` },
+        { label: '0 - 100 km/h', render: v => v.acc },
+        { label: 'Transmisión', render: v => v.trans },
+        { label: 'Proyección 5 Años', render: v => `<span class="text-xs px-2.5 py-1 rounded-full bg-champagne/15 text-champagne">${v.retention}</span>` }
+      ];
+
+      container.innerHTML = `
+        <div class="overflow-x-auto rounded-2xl border border-subtle bg-graphite shadow-xl">
+          <table class="w-full min-w-[680px] text-left border-collapse">
+            <thead>
+              <tr class="border-b border-subtle bg-obsidian/70">
+                <th class="p-4 text-xs uppercase tracking-wider text-metallic w-44">Especificación</th>
+                ${selected.map(v => {
+                  const src = v.imageUrl || CarImageEngine.buildFallbackSVG(v.brand, v.model, v.year);
+                  return `
+                    <th class="p-4 align-top">
+                      <div class="relative rounded-xl overflow-hidden aspect-[16/10] mb-3 bg-obsidian border border-subtle">
+                        <img src="${src}" alt="${v.name}" referrerpolicy="no-referrer" onerror="handleImageError(this, '${v.brand.replace(/'/g, "\\'")}', '${v.model.replace(/'/g, "\\'")}', '${v.year}')" class="w-full h-full object-cover" />
+                        <button type="button" onclick="toggleCompare('${v.id}')" title="Quitar" class="absolute top-2 right-2 p-1.5 rounded-lg bg-obsidian/85 text-smoke hover:text-champagne">
+                          <i data-lucide="x" class="w-4 h-4"></i>
+                        </button>
+                      </div>
+                      <p class="font-serif text-base font-bold text-smoke">${v.name}</p>
+                    </th>
+                  `;
+                }).join('')}
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-subtle/70 text-sm">
+              ${rows.map(row => `
+                <tr class="hover:bg-obsidian/40 transition-colors">
+                  <td class="p-4 text-xs uppercase tracking-wider text-metallic font-medium">${row.label}</td>
+                  ${selected.map(v => `<td class="p-4 text-smoke">${row.render(v)}</td>`).join('')}
+                </tr>
+              `).join('')}
+              <tr>
+                <td class="p-4 text-xs uppercase tracking-wider text-metallic font-medium">Acciones</td>
+                ${selected.map(v => `
+                  <td class="p-4">
+                    <div class="flex flex-col sm:flex-row gap-2">
+                      <button type="button" onclick="scheduleForVehicle('${v.id}')" class="flex-1 py-2 px-3 rounded-xl bg-champagne text-obsidian font-semibold text-xs hover:bg-champagne-light transition-colors">
+                        Agendar Cita
+                      </button>
+                      <button type="button" onclick="openVehicleModal('${v.id}')" class="py-2 px-3 rounded-xl border border-subtle text-smoke text-xs hover:border-champagne transition-colors">
+                        Ficha
+                      </button>
+                    </div>
+                  </td>
+                `).join('')}
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      `;
+      lucide.createIcons();
+    }
+
+    /**
+     * =========================================================================
+     * 11. MODALES DE CONSIGNACIÓN, ALIANZAS, CITAS Y LEGALES
+     * =========================================================================
+     */
+    function openSellModal(mode = 'consignacion', preselectedPlan = null) {
+      document.getElementById('sell-form').classList.remove('hidden');
+      document.getElementById('sell-confirmation').classList.add('hidden');
+      document.getElementById('sell-form').reset();
+      populateModelSelect('', 'sell-model', 'Selecciona modelo');
+      if (preselectedPlan) {
+        document.getElementById('sell-plan').value = preselectedPlan;
+      }
+      switchSellTab(mode);
+      openModal('sell-modal');
+    }
+
+    function switchSellTab(mode) {
+      document.getElementById('sell-mode').value = mode;
+      const isConsign = mode === 'consignacion';
+      document.getElementById('sell-modal-title').textContent = isConsign
+        ? 'Postular Vehículo en Consignación'
+        : 'Solicitar Alianza Estratégica';
+      document.getElementById('sell-vehicle-fields').classList.toggle('hidden', !isConsign);
+      document.getElementById('sell-alliance-fields').classList.toggle('hidden', isConsign);
+
+      const tabC = document.getElementById('tab-consignacion');
+      const tabA = document.getElementById('tab-alianza');
+      if (isConsign) {
+        tabC.className = 'py-2.5 rounded-lg text-xs font-semibold uppercase tracking-wider transition-colors bg-champagne text-obsidian';
+        tabA.className = 'py-2.5 rounded-lg text-xs font-semibold uppercase tracking-wider transition-colors text-metallic hover:text-smoke';
+      } else {
+        tabA.className = 'py-2.5 rounded-lg text-xs font-semibold uppercase tracking-wider transition-colors bg-champagne text-obsidian';
+        tabC.className = 'py-2.5 rounded-lg text-xs font-semibold uppercase tracking-wider transition-colors text-metallic hover:text-smoke';
+      }
+    }
+
+    function preselectInterest(val) {
+      const sel = document.getElementById('appt-interest');
+      if (sel) sel.value = val;
+    }
+
+    function setMinDateToday() {
+      const dateInput = document.getElementById('appt-date');
+      if (!dateInput) return;
+      const today = new Date();
+      const formatted = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+      dateInput.min = formatted;
+      if (!dateInput.value) dateInput.value = formatted;
+    }
+
+    function resetAppointmentForm(silent = false) {
+      const form = document.getElementById('appointment-form');
+      const conf = document.getElementById('appointment-confirmation');
+      if (form && conf) {
+        form.reset();
+        form.classList.remove('hidden');
+        conf.classList.add('hidden');
+        setMinDateToday();
+      }
+      if (!silent) showToast('Formulario listo para una nueva cita.', 'info');
+    }
+
+    function openLegalModal(type) {
+      const title = document.getElementById('legal-modal-title');
+      const body = document.getElementById('legal-modal-body');
+      if (!title || !body) return;
+
+      if (type === 'privacy') {
+        title.textContent = 'Aviso de Privacidad Integral';
+        body.innerHTML = `
+          <p><strong class="text-smoke">Greyhound Motorsports, S.A. de C.V.</strong>, con domicilio en Av. Revolución No. 1450, Local 3, Col. Zona Centro, C.P. 22000, Tijuana, Baja California, México, es responsable del tratamiento y protección de sus datos personales conforme a la LFPDPPP.</p>
+          <p><strong class="text-smoke">1. Finalidades:</strong> Sus datos (nombre, teléfono, correo electrónico, ciudad y preferencias automotrices) se utilizan únicamente para coordinar demostraciones privadas, gestionar consignaciones o alianzas, emitir reportes de certificación y brindar servicio White Glove.</p>
+          <p><strong class="text-smoke">2. Seguridad y Confidencialidad:</strong> Aplicamos medidas técnicas y administrativas estrictas para resguardar su identidad y patrimonio en operaciones de alto valor.</p>
+          <p><strong class="text-smoke">3. Derechos ARCO:</strong> Puede ejercer sus derechos de Acceso, Rectificación, Cancelación u Oposición directamente en nuestras oficinas en Tijuana, B.C.</p>
+        `;
+      } else {
+        title.textContent = 'Términos y Condiciones Legales';
+        body.innerHTML = `
+          <p>El uso de la plataforma digital de <strong class="text-smoke">Greyhound Motorsports, S.A. de C.V.</strong> implica la aceptación de estos términos:</p>
+          <p><strong class="text-smoke">1. Naturaleza de intermediación:</strong> Greyhound Motorsports actúa como intermediario especializado en compraventa, consignación, peritaje técnico y coordinación de personalización automotriz, y no como fábrica de ensamble.</p>
+          <p><strong class="text-smoke">2. Modelo comercial:</strong> Los propietarios fijan el precio de lista de sus vehículos. Greyhound aplica una comisión del 30% sobre venta concretada, además de planes de membresía de vendedor ($1,500 MXN/mes o $3,600 MXN semestral) y espacios para aliados ($5,000 MXN/mes).</p>
+          <p><strong class="text-smoke">3. Certificación y proyecciones:</strong> Los reportes reflejan el estado auditado al momento de la inspección; las gráficas de valorización a 5 años son estimaciones informativas de mercado.</p>
+          <p><strong class="text-smoke">4. Jurisdicción:</strong> Tribunales competentes de Tijuana, Baja California, México.</p>
+        `;
+      }
+      openModal('legal-modal');
+    }
+
+    /**
+     * =========================================================================
+     * 12. INICIALIZACIÓN GLOBAL
+     * =========================================================================
+     */
+    document.addEventListener('DOMContentLoaded', () => {
+      populateBrandSelects();
+      renderBrandPills();
+      setMinDateToday();
+      renderCatalog();
+      renderComparison();
+      lucide.createIcons();
+
+      // 1. Cargar imagen de fondo del Hero vía CarImageEngine
+      CarImageEngine.getSingleCarImage('Porsche', '911 GT3', '2024').then(url => {
+        const heroImg = document.getElementById('hero-bg-img');
+        if (heroImg && url && !url.startsWith('data:')) {
+          heroImg.onload = () => heroImg.classList.remove('hidden');
+          heroImg.src = url;
+          if (heroImg.complete && heroImg.naturalWidth > 0) heroImg.classList.remove('hidden');
+        }
+      });
+
+      // 2. Precargar TODAS las imágenes principales del inventario en solo 4 lotes HTTP
+      CarImageEngine.preloadInventory(INVENTORY);
+
+      // Menú móvil
+      document.getElementById('mobile-menu-btn').addEventListener('click', () => toggleMobileMenu());
+      document.querySelectorAll('.mobile-nav-link').forEach(link => {
+        link.addEventListener('click', () => toggleMobileMenu(false));
+      });
+
+      // Selectores en cascada Hero
+      document.getElementById('hero-brand-select').addEventListener('change', e => {
+        populateModelSelect(e.target.value, 'hero-model-select', 'Todos los modelos');
+      });
+
+      // Autocompletado Hero
+      setupAutocomplete('hero-search-input', 'hero-autocomplete', (brand, model) => {
+        state.brand = brand;
+        state.model = model;
+        state.search = '';
+        state.visibleCount = 12;
+
+        document.getElementById('hero-search-input').value = `${brand} ${model}`;
+        document.getElementById('filter-brand').value = brand;
+        populateModelSelect(brand, 'filter-model', 'Todos');
+        document.getElementById('filter-model').value = model;
+        document.getElementById('filter-search').value = '';
+
+        renderBrandPills();
+        renderCatalog();
+        document.getElementById('catalogo').scrollIntoView({ behavior: 'smooth' });
+      });
+
+      // Autocompletado Catálogo
+      setupAutocomplete('filter-search', 'catalog-autocomplete', (brand, model) => {
+        state.brand = brand;
+        state.model = model;
+        state.search = '';
+        state.visibleCount = 12;
+
+        document.getElementById('filter-brand').value = brand;
+        populateModelSelect(brand, 'filter-model', 'Todos');
+        document.getElementById('filter-model').value = model;
+        document.getElementById('filter-search').value = '';
+
+        renderBrandPills();
+        renderCatalog();
+      });
+
+      // Envío formulario búsqueda Hero
+      document.getElementById('hero-search-form').addEventListener('submit', e => {
+        e.preventDefault();
+        const q = document.getElementById('hero-search-input').value.trim();
+        const b = document.getElementById('hero-brand-select').value;
+        const m = document.getElementById('hero-model-select').value;
+        const c = document.getElementById('hero-city-select').value;
+
+        state.search = q;
+        state.brand = b;
+        state.model = b === 'Todas' ? 'Todos' : m;
+        state.city = c;
+        state.visibleCount = 12;
+
+        document.getElementById('filter-search').value = q;
+        document.getElementById('filter-brand').value = b;
+        populateModelSelect(b, 'filter-model', 'Todos');
+        if (b !== 'Todas') document.getElementById('filter-model').value = m;
+        document.getElementById('filter-city').value = c;
+
+        renderBrandPills();
+        renderCatalog();
+        document.getElementById('catalogo').scrollIntoView({ behavior: 'smooth' });
+      });
+
+      // Filtros en tiempo real del Catálogo
+      document.getElementById('filter-search').addEventListener('input', e => {
+        state.search = e.target.value;
+        state.visibleCount = 12;
+        renderCatalog();
+      });
+      document.getElementById('filter-brand').addEventListener('change', e => {
+        state.brand = e.target.value;
+        state.model = 'Todos';
+        state.visibleCount = 12;
+        populateModelSelect(state.brand, 'filter-model', 'Todos');
+        renderBrandPills();
+        renderCatalog();
+      });
+      document.getElementById('filter-model').addEventListener('change', e => {
+        state.model = e.target.value;
+        state.visibleCount = 12;
+        renderCatalog();
+      });
+      document.getElementById('filter-category').addEventListener('change', e => {
+        state.category = e.target.value;
+        state.visibleCount = 12;
+        renderCatalog();
+      });
+      document.getElementById('filter-city').addEventListener('change', e => {
+        state.city = e.target.value;
+        state.visibleCount = 12;
+        renderCatalog();
+      });
+      document.getElementById('filter-max-price').addEventListener('change', e => {
+        state.maxPrice = Number(e.target.value) || 0;
+        state.visibleCount = 12;
+        renderCatalog();
+      });
+      document.getElementById('filter-sort').addEventListener('change', e => {
+        state.sort = e.target.value;
+        renderCatalog();
+      });
+      document.getElementById('clear-filters-btn').addEventListener('click', resetFilters);
+
+      // Paginación progresiva
+      document.getElementById('load-more-btn').addEventListener('click', () => {
+        state.visibleCount += 12;
+        renderCatalog();
+      });
+
+      // Cascada en modal de consignación
+      document.getElementById('sell-brand').addEventListener('change', e => {
+        populateModelSelect(e.target.value, 'sell-model', 'Selecciona modelo');
+      });
+
+      // Envío de Citas
+      document.getElementById('appointment-form').addEventListener('submit', e => {
+        e.preventDefault();
+        const name = document.getElementById('appt-name').value.trim();
+        const email = document.getElementById('appt-email').value.trim();
+        const phone = document.getElementById('appt-phone').value.trim();
+        const vehicle = document.getElementById('appt-vehicle').value.trim() || 'Asesoría General';
+        const city = document.getElementById('appt-city').value;
+        const date = document.getElementById('appt-date').value;
+        const time = document.getElementById('appt-time').value;
+        const interest = document.getElementById('appt-interest').value;
+
+        if (!name || !email || !email.includes('@') || !phone || !date || !time) {
+          showToast('Completa todos los campos obligatorios correctamente.', 'error');
+          return;
+        }
+
+        const folio = `GHM-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+        document.getElementById('conf-folio').textContent = folio;
+        document.getElementById('conf-name').textContent = name;
+        document.getElementById('conf-vehicle').textContent = vehicle;
+        document.getElementById('conf-city').textContent = city;
+        document.getElementById('conf-datetime').textContent = `${date} a las ${time} hrs`;
+        document.getElementById('conf-interest').textContent = interest;
+
+        document.getElementById('appointment-form').classList.add('hidden');
+        document.getElementById('appointment-confirmation').classList.remove('hidden');
+        lucide.createIcons();
+        showToast(`Cita confirmada con folio ${folio}.`, 'success');
+      });
+
+      // Envío de Consignación / Alianza
+      document.getElementById('sell-form').addEventListener('submit', e => {
+        e.preventDefault();
+        const mode = document.getElementById('sell-mode').value;
+        const name = document.getElementById('sell-name').value.trim();
+        const phone = document.getElementById('sell-phone').value.trim();
+        const email = document.getElementById('sell-email').value.trim();
+
+        if (!name || !phone || !email || !email.includes('@')) {
+          showToast('Completa nombre, teléfono y correo electrónico válido.', 'error');
+          return;
+        }
+
+        const refCode = `SOL-${Math.floor(10000 + Math.random() * 90000)}`;
+        if (mode === 'consignacion') {
+          const brand = document.getElementById('sell-brand').value;
+          const model = document.getElementById('sell-model').value;
+          const year = document.getElementById('sell-car-year').value;
+          const price = document.getElementById('sell-car-price').value.trim();
+          if (!brand || !model || !year || !price) {
+            showToast('Selecciona marca, modelo, año y precio deseado.', 'error');
+            return;
+          }
+          document.getElementById('sell-conf-text').textContent =
+            `Gracias, ${name}. Tu consignación para "${brand} ${model} ${year}" fue registrada con el folio ${refCode}. Un especialista te contactará en menos de 24 horas.`;
+        } else {
+          const company = document.getElementById('sell-company').value.trim();
+          if (!company) {
+            showToast('Ingresa el nombre de tu empresa.', 'error');
+            return;
+          }
+          document.getElementById('sell-conf-text').textContent =
+            `Gracias, ${name}. Recibimos la solicitud de Alianza Estratégica para "${company}" bajo el folio ${refCode}. Dirección Comercial se comunicará contigo.`;
+        }
+
+        document.getElementById('sell-form').classList.add('hidden');
+        document.getElementById('sell-confirmation').classList.remove('hidden');
+        lucide.createIcons();
+        showToast(`Solicitud enviada (${refCode}).`, 'success');
+      });
+     });
+  </script>
+</body>
+</html>
